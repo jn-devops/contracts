@@ -2,6 +2,4 @@
 
 namespace Homeful\Contracts;
 
-class Contracts
-{
-}
+class Contracts {}

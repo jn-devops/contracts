@@ -2,9 +2,9 @@
 
 namespace Homeful\Contracts;
 
+use Homeful\Contracts\Commands\ContractsCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Homeful\Contracts\Commands\ContractsCommand;
 
 class ContractsServiceProvider extends PackageServiceProvider
 {

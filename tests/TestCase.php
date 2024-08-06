@@ -2,9 +2,9 @@
 
 namespace Homeful\Contracts\Tests;
 
+use Homeful\Contracts\ContractsServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Homeful\Contracts\ContractsServiceProvider;
 
 class TestCase extends Orchestra
 {
