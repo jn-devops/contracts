@@ -8,11 +8,23 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('contracts_table', function (Blueprint $table) {
+        Schema::create('contracts', function (Blueprint $table) {
             $table->id();
-
-            // add fields
-
+            $table->string('reference_code')->nullable()->index();
+            $table->integer('contact_id')->nullable()->index();
+            $table->string('property_code')->nullable()->index();
+            $table->string('seller_commission_code')->nullable()->index();
+            $table->schemalessAttributes('meta');
+            $table->string('state')->nullable();
+            $table->timestamp('consulted_at')->nullable();
+            $table->timestamp('availed_at')->nullable();
+            $table->timestamp('verified_at')->nullable();
+            $table->timestamp('onboarded_at')->nullable();
+            $table->timestamp('paid_at')->nullable();
+            $table->timestamp('approved_at')->nullable();
+            $table->timestamp('disapproved_at')->nullable();
+            $table->timestamp('overridden_at')->nullable();
+            $table->timestamp('cancelled_at')->nullable();
             $table->timestamps();
         });
     }

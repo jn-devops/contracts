@@ -17,8 +17,14 @@
     ],
     "require": {
         "php": "^8.2",
-        "spatie/laravel-package-tools": "^1.16",
-        "illuminate/contracts": "^10.0||^11.0"
+        "illuminate/contracts": "^10.0||^11.0",
+        "jn-devops/borrower": "^1.0",
+        "jn-devops/common": "^1.1",
+        "jn-devops/contacts": "^1.4",
+        "jn-devops/mortgage": "^1.0",
+        "jn-devops/properties": "^1.0",
+        "spatie/laravel-model-states": "^2.7",
+        "spatie/laravel-package-tools": "^1.16"
     },
     "require-dev": {
         "laravel/pint": "^1.14",

@@ -2,9 +2,9 @@
 
 namespace Homeful\Contracts;
 
-use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Homeful\Contracts\Commands\ContractsCommand;
+use Spatie\LaravelPackageTools\Package;
 
 class ContractsServiceProvider extends PackageServiceProvider
 {
@@ -17,7 +17,7 @@ class ContractsServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('contracts')
-            ->hasConfigFile()
+            ->hasConfigFile(['data', 'mortgage', 'payment'])
             ->hasViews()
             ->hasMigration('create_contracts_table')
             ->hasCommand(ContractsCommand::class);
