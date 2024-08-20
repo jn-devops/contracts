@@ -69,6 +69,19 @@ trait HasDatedStatusAttributes
             && $this->getAttribute('paid_at') <= now();
     }
 
+    public function setQualifiedAttribute(bool $value): self
+    {
+        $this->setAttribute('qualified_at', $value ? now() : null);
+
+        return $this;
+    }
+
+    public function getQualifiedAttribute(): bool
+    {
+        return $this->getAttribute('qualified_at')
+            && $this->getAttribute('qualified_at') <= now();
+    }
+
     public function setApprovedAttribute(bool $value): self
     {
         $this->setAttribute('approved_at', $value ? now() : null);

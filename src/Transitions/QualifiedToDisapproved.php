@@ -5,7 +5,7 @@ namespace Homeful\Contracts\Transitions;
 use Homeful\Contracts\States\Disapproved;
 use Homeful\Contracts\Models\Contract;
 
-class PaidToDisapproved extends ContractTransition
+class QualifiedToDisapproved extends ContractTransition
 {
     public function handle(): Contract
     {

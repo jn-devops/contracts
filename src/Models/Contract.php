@@ -35,6 +35,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon $verified_at
  * @property Carbon $onboarded_at
  * @property Carbon $paid_at
+ * @property Carbon $qualified_at
  * @property Carbon $approved_at
  * @property Carbon $disapproved_at
  * @property Carbon $overridden_at
@@ -44,6 +45,7 @@ use Illuminate\Support\Carbon;
  * @property bool $verified
  * @property bool $onboarded
  * @property bool $paid
+ * @property bool $qualified
  * @property bool $approved
  * @property bool $disapproved
  * @property bool $overridden

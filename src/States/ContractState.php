@@ -8,8 +8,9 @@ use Homeful\Contracts\Transitions\ConsultedToAvailed;
 use Homeful\Contracts\Transitions\DisapprovedToOverridden;
 use Homeful\Contracts\Transitions\OnboardedToPaid;
 use Homeful\Contracts\Transitions\OverriddenToCancelled;
-use Homeful\Contracts\Transitions\PaidToApproved;
-use Homeful\Contracts\Transitions\PaidToDisapproved;
+use Homeful\Contracts\Transitions\QualifiedToApproved;
+use Homeful\Contracts\Transitions\QualifiedToDisapproved;
+use Homeful\Contracts\Transitions\PaidToQualified;
 use Homeful\Contracts\Transitions\PendingToConsulted;
 use Homeful\Contracts\Transitions\VerifiedToOnboarded;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
@@ -31,8 +32,9 @@ abstract class ContractState extends State
             ->allowTransition(Availed::class, Verified::class, AvailedToVerified::class)
             ->allowTransition(Verified::class, Onboarded::class, VerifiedToOnboarded::class)
             ->allowTransition(Onboarded::class, Paid::class, OnboardedToPaid::class)
-            ->allowTransition(Paid::class, Approved::class, PaidToApproved::class)
-            ->allowTransition(Paid::class, Disapproved::class, PaidToDisapproved::class)
+            ->allowTransition(Paid::class, Qualified::class, PaidToQualified::class)
+            ->allowTransition(Qualified::class, Approved::class, QualifiedToApproved::class)
+            ->allowTransition(Qualified::class, Disapproved::class, QualifiedToDisapproved::class)
             ->allowTransition(Disapproved::class, Overridden::class, DisapprovedToOverridden::class)
             ->allowTransition(Approved::class, Cancelled::class, ApprovedToCancelled::class)
             ->allowTransition(Overridden::class, Cancelled::class, OverriddenToCancelled::class)

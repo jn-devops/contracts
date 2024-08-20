@@ -2,14 +2,13 @@
 
 namespace Homeful\Contracts\Tests;
 
-
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Orchestra\Testbench\TestCase as Orchestra;
-use Homeful\Contracts\ContractsServiceProvider;
-use Spatie\SchemalessAttributes\SchemalessAttributesServiceProvider;
 use Homeful\Mortgage\Providers\EventServiceProvider as MortgageEventServiceProvider;
-use Homeful\Contacts\ContactsServiceProvider;
+use Spatie\SchemalessAttributes\SchemalessAttributesServiceProvider;
 use Homeful\Contracts\Providers\EventServiceProvider;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Homeful\Contracts\ContractsServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
+use Homeful\Contacts\ContactsServiceProvider;
 
 class TestCase extends Orchestra
 {

@@ -2,8 +2,10 @@
 
 namespace Homeful\Contracts\Data;
 
+use Homeful\Properties\Data\PropertyData;
 use Homeful\Mortgage\Data\MortgageData;
 use Homeful\Contracts\Models\Contract;
+use Homeful\Contacts\Data\ContactData;
 use Illuminate\Support\Carbon;
 use Spatie\LaravelData\Data;
 
@@ -11,6 +13,8 @@ class ContractData extends Data
 {
     public function __construct(
         public ?string $reference_code,
+        public ContactData $customer,
+        public PropertyData $inventory,
         public MortgageData $mortgage,
         public string $state,
         public ?Carbon $consulted_at,
@@ -33,10 +37,12 @@ class ContractData extends Data
         public bool $cancelled
     ){}
 
-    public static function fromObject(Contract $contract): ContractData
+    public static function fromModel(Contract $contract): ContractData
     {
         return new self(
             reference_code: $contract->reference_code,
+            customer: ContactData::fromModel($contract->customer),
+            inventory: PropertyData::fromModel($contract->inventory),
             mortgage: MortgageData::fromObject($contract->mortgage),
             state: $contract->state->getValue(),
             consulted_at: $contract->consulted_at,

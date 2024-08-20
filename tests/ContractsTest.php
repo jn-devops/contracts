@@ -1,17 +1,21 @@
 <?php
 
+
 use Spatie\SchemalessAttributes\SchemalessAttributes;
 use Homeful\Properties\Models\Property as Inventory;
 use Homeful\Contacts\Models\Contact as Customer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Homeful\Properties\Data\PropertyData;
 use Homeful\Contracts\States\Disapproved;
 use Homeful\Contracts\States\Overridden;
 use Homeful\Contracts\Data\ContractData;
+use Homeful\Contracts\States\Qualified;
 use Homeful\Contracts\States\Consulted;
 use Homeful\Contracts\States\Cancelled;
 use Homeful\Contracts\States\Onboarded;
 use Homeful\Mortgage\Data\MortgageData;
+use Homeful\Contacts\Data\ContactData;
 use Homeful\Contracts\Models\Contract;
 use Homeful\Contracts\States\Approved;
 use Homeful\Contracts\States\Verified;
@@ -34,18 +38,8 @@ beforeEach(function () {
     $migration->up();
     $migration = include 'vendor/jn-devops/properties/database/migrations/create_properties_table.php.stub';
     $migration->up();
-});
-
-dataset('params', function() {
-    return [
-        fn () => [
-            Input::PERCENT_DP => 5 / 100,
-            Input::PERCENT_MF => 8.5 / 100,
-            Input::DP_TERM => 12,
-            Input::BP_TERM => 20,
-            Input::BP_INTEREST_RATE => 7 / 100,
-        ]
-    ];
+    $migration = include 'vendor/spatie/laravel-medialibrary/database/migrations/create_media_table.php.stub';
+    $migration->up();
 });
 
 dataset('customer', function() {
@@ -57,6 +51,18 @@ dataset('customer', function() {
 dataset('inventory', function() {
     return [
         fn () => Inventory::factory()->for(Product::factory()->state(['price' => 2500000]))->create()
+    ];
+});
+
+dataset('params', function() {
+    return [
+        fn () => [
+            Input::PERCENT_DP => 5 / 100,
+            Input::PERCENT_MF => 8.5 / 100,
+            Input::DP_TERM => 12,
+            Input::BP_TERM => 20,
+            Input::BP_INTEREST_RATE => 7 / 100,
+        ]
     ];
 });
 
@@ -149,6 +155,7 @@ it('has an inventory relation', function (Inventory $inventory) {
     with(Contract::factory()->for(factory: $inventory, relationship: 'inventory')->create(), function (Contract $contract) use ($inventory) {
         expect($contract->inventory->is($inventory))->toBeTrue();
         expect($contract->inventory->product->getTotalContractPrice()->inclusive()->compareTo(2500000))->toBe(0);
+
     });
 })->with('inventory');
 
@@ -182,7 +189,6 @@ it('can compute mortgage from input attributes', function(Customer $customer, In
         expect((float) $mortgage->getDownPaymentTerm())->toBe($contract->down_payment_term);//TODO: update $mortgage->getDownPaymentTerm(), return float
         expect((float) $mortgage->getBalancePaymentTerm())->toBe($contract->balance_payment_term);//TODO: update $mortgage->getBalancePaymentTerm(), return float
         expect($mortgage->getInterestRate())->toBe($contract->interest_rate);
-//        UpdateMortgage::run($contract);
         expect(MortgageData::from($contract->mortgage)->toArray())->toBe(MortgageData::from($mortgage)->toArray());
     });
 })->with('customer', 'inventory', 'params');
@@ -231,6 +237,13 @@ it('has dated status', function() {
     expect($contract->approved)->toBeTrue();
     expect($contract->approved_at)->toBeInstanceOf(Carbon::class);
     expect($contract->approved_at->diffInMilliseconds($dt, true))->toBeLessThan(1);
+    //qualified
+    expect($contract->qualified)->toBeFalse();
+    expect($contract->qualified_at)->toBeNull();
+    $contract->qualified = (bool) ($dt = now());
+    expect($contract->qualified)->toBeTrue();
+    expect($contract->qualified_at)->toBeInstanceOf(Carbon::class);
+    expect($contract->qualified_at->diffInMilliseconds($dt, true))->toBeLessThan(1);
     //disapproved
     expect($contract->disapproved)->toBeFalse();
     expect($contract->disapproved_at)->toBeNull();
@@ -283,6 +296,11 @@ it('has states', function() {
     expect($contract->state)->toBeInstanceOf(Paid::class);
     expect($contract->paid)->toBeTrue();
 
+    expect($contract->qualified)->toBeFalse();
+    $contract->state->transitionTo(Qualified::class);
+    expect($contract->state)->toBeInstanceOf(Qualified::class);
+    expect($contract->qualified)->toBeTrue();
+
     expect($contract->approved)->toBeFalse();
     $contract->state->transitionTo(Approved::class);
     expect($contract->state)->toBeInstanceOf(Approved::class);
@@ -293,12 +311,33 @@ it('has states', function() {
     expect($contract->state)->toBeInstanceOf(Cancelled::class);
     expect($contract->cancelled)->toBeTrue();
 
+    /** qualified */
     $contract = new Contract;
     $contract->state->transitionTo(Consulted::class);
     $contract->state->transitionTo(Availed::class);
     $contract->state->transitionTo(Verified::class);
     $contract->state->transitionTo(Onboarded::class);
     $contract->state->transitionTo(Paid::class);
+    $contract->state->transitionTo(Qualified::class);
+
+//    expect($contract->overridden)->toBeFalse();
+//    $contract->state->transitionTo(Overridden::class);
+//    expect($contract->state)->toBeInstanceOf(Overridden::class);
+//    expect($contract->overridden)->toBeTrue();
+//
+//    expect($contract->cancelled)->toBeFalse();
+//    $contract->state->transitionTo(Cancelled::class);
+//    expect($contract->state)->toBeInstanceOf(Cancelled::class);
+//    expect($contract->cancelled)->toBeTrue();
+
+    /** failed */
+    $contract = new Contract;
+    $contract->state->transitionTo(Consulted::class);
+    $contract->state->transitionTo(Availed::class);
+    $contract->state->transitionTo(Verified::class);
+    $contract->state->transitionTo(Onboarded::class);
+    $contract->state->transitionTo(Paid::class);
+    $contract->state->transitionTo(Qualified::class);
 
     expect($contract->disapproved)->toBeFalse();
     $contract->state->transitionTo(Disapproved::class);
@@ -327,14 +366,14 @@ it('has data', function(Customer $customer, Inventory $inventory, array $params)
     $contract->interest_rate = $params[Input::BP_INTEREST_RATE];
     $contract->save();
     $contract->load('customer', 'inventory');
-//    UpdateMortgage::run($contract);
-
     $borrower = (new Borrower)->setGrossMonthlyIncome($customer->getGrossMonthlyIncome())->setBirthdate($customer->getBirthdate());
     $property = (new Property)->setTotalContractPrice($inventory->product->getTotalContractPrice())->setAppraisedValue($inventory->product->getAppraisedValue());
 
     with(new Mortgage(property: $property, borrower: $borrower, params: $params), function (Mortgage $mortgage) use ($contract) {
-        $data = ContractData::fromObject($contract);
+        $data = ContractData::fromModel($contract);
         expect($data->reference_code)->toBeNull();
+        expect($data->customer)->toBeInstanceOf(ContactData::class);
+        expect($data->inventory)->toBeInstanceOf(PropertyData::class);
         expect($data->mortgage)->toBeInstanceOf(MortgageData::class);
         expect($data->state)->toBe(Pending::class);
         expect($data->consulted_at)->toBeNull();

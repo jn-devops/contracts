@@ -2,15 +2,15 @@
 
 namespace Homeful\Contracts\Transitions;
 
+use Homeful\Contracts\States\Qualified;
 use Homeful\Contracts\Models\Contract;
-use Homeful\Contracts\States\Approved;
 
-class PaidToApproved extends ContractTransition
+class PaidToQualified extends ContractTransition
 {
     public function handle(): Contract
     {
-        $this->contract->state = new Approved($this->contract);
-        $this->contract->approved = true;
+        $this->contract->state = new Qualified($this->contract);
+        $this->contract->qualified = true;
         $this->contract->save();
 
         return $this->contract;

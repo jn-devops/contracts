@@ -11,7 +11,7 @@ use Homeful\Mortgage\Mortgage;
 use Homeful\Property\Property;
 use Homeful\Borrower\Borrower;
 
-class UpdateMortgage
+class UpdateContractMortgageAttribute
 {
     use AsAction;
 
@@ -30,22 +30,8 @@ class UpdateMortgage
      */
     public function handle(Contract $contract): bool
     {
-        $params = [
-            Input::PERCENT_DP => $contract->percent_down_payment,
-            Input::PERCENT_MF => $contract->percent_miscellaneous_fees,
-            Input::DP_TERM => $contract->down_payment_term,
-            Input::BP_TERM => $contract->balance_payment_term,
-            Input::BP_INTEREST_RATE => $contract->interest_rate,
-        ];
-
-        //TODO: sync min and max values from local setters
-        $validator = Validator::make($params, [
-            Input::PERCENT_DP => ['required', 'numeric', 'min:0', 'max:0.50'],
-            Input::PERCENT_MF => ['required', 'numeric', 'min:0', 'max:0.15'],
-            Input::DP_TERM => ['required', 'integer', 'min:0', 'max:24'],
-            Input::BP_TERM => ['required', 'integer', 'min:0', 'max:30'],
-            Input::BP_INTEREST_RATE => ['required', 'numeric', 'min:0', 'max:0.20'],
-        ]);
+        $params = $this->getInputParams($contract);
+        $validator = Validator::make($params, $this->rules());
 
         if ($validator->fails())
             return false;
@@ -59,6 +45,35 @@ class UpdateMortgage
 
             return false;
         }
+    }
+
+    /**
+     * @return array[]
+     */
+    public function rules(): array
+    {
+        return [
+            Input::PERCENT_DP => ['required', 'numeric', 'min:0', 'max:0.50'],
+            Input::PERCENT_MF => ['required', 'numeric', 'min:0', 'max:0.15'],
+            Input::DP_TERM => ['required', 'integer', 'min:0', 'max:24'],
+            Input::BP_TERM => ['required', 'integer', 'min:0', 'max:30'],
+            Input::BP_INTEREST_RATE => ['required', 'numeric', 'min:0', 'max:0.20'],
+        ];
+    }
+
+    /**
+     * @param Contract $contract
+     * @return array
+     */
+    protected function getInputParams(Contract $contract): array
+    {
+        return [
+            Input::PERCENT_DP => $contract->percent_down_payment,
+            Input::PERCENT_MF => $contract->percent_miscellaneous_fees,
+            Input::DP_TERM => $contract->down_payment_term,
+            Input::BP_TERM => $contract->balance_payment_term,
+            Input::BP_INTEREST_RATE => $contract->interest_rate,
+        ];
     }
 
     /**

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->timestamp('verified_at')->nullable();
             $table->timestamp('onboarded_at')->nullable();
             $table->timestamp('paid_at')->nullable();
+            $table->timestamp('qualified_at')->nullable();
             $table->timestamp('approved_at')->nullable();
             $table->timestamp('disapproved_at')->nullable();
             $table->timestamp('overridden_at')->nullable();
