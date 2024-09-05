@@ -2,11 +2,29 @@
 
 namespace Homeful\Contracts\Traits;
 
+use Homeful\Common\Classes\Input;
 use Homeful\Contracts\Models\Contract;
 use Exception;
 
 trait HasInputAttributes
 {
+    const PERCENT_DP_FIELD = Input::PERCENT_DP;
+    const PERCENT_MF_FIELD = Input::PERCENT_MF;
+    const DP_TERM_FIELD = Input::DP_TERM;
+    const BP_TERM_FIELD = Input::BP_TERM;
+    const BP_INTEREST_RATE_FIELD = Input::BP_INTEREST_RATE;
+
+    public function initializeHasInputAttributes(): void
+    {
+        $this->mergeFillable([
+            'percent_down_payment',
+            'percent_miscellaneous_fees',
+            'down_payment_term',
+            'balance_payment_term',
+            'interest_rate'
+        ]);
+    }
+
     public function setPercentDownPaymentAttribute(float $percent_dp): self
     {
         if ($percent_dp > 0.20) throw new Exception('Maximum percent down payment breached.');

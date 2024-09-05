@@ -64,22 +64,11 @@ class Contract extends Model
     use HasMeta;
     use HasStates;
 
-    const PERCENT_DP_FIELD = Input::PERCENT_DP;
-    const PERCENT_MF_FIELD = Input::PERCENT_MF;
-    const DP_TERM_FIELD = Input::DP_TERM;
-    const BP_TERM_FIELD = Input::BP_TERM;
-    const BP_INTEREST_RATE_FIELD = Input::BP_INTEREST_RATE;
-
     protected $fillable = [
         'customer',
         'inventory',
-        'percent_down_payment',
-        'percent_miscellaneous_fees',
-        'down_payment_term',
-        'balance_payment_term',
-        'interest_rate',
-        'seller_commission_code',
         'reference_code',
+        'seller_commission_code',
     ];
 
     protected $casts = [
