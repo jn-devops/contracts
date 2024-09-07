@@ -397,4 +397,9 @@ it('has data', function(Customer $customer, Inventory $inventory, array $params)
     });
 })->with('customer', 'inventory', 'params');
 
+test('data from factory works', function () {
+    $contract = Contract::factory()->create();
+    expect(ContractData::fromModel($contract))->toBeInstanceOf(ContractData::class);
+});
+
 

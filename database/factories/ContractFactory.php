@@ -14,9 +14,12 @@ class ContractFactory extends Factory
 
     public function definition(): array
     {
+        $product = Product::factory()->create(['price' => 2500000]);
+        $inventory = Inventory::factory()->create(['sku' => $product->sku]);
+
         return [
-            'contact_id' => Customer::factory()->state(['date_of_birth' => '1999-03-17'])->create(),
-            'property_code' => Inventory::factory()->for(Product::factory()->state(['price' => 2500000]))->create()->getAttribute('code'),
+            'contact_id' => Customer::factory()->state(['date_of_birth' => '1999-03-17', 'employment' => [0 => ['type' => 'buyer', 'monthly_gross_income' => 50000]]])->create(),
+            'property_code' => $inventory->getAttribute('code'),
             'percent_down_payment' => $this->faker->numberBetween(5, 10)/100,
             'percent_miscellaneous_fees' => $this->faker->numberBetween(8, 10)/100,
             'down_payment_term' => $this->faker->numberBetween(12, 24) * 1.00,
