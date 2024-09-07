@@ -2,6 +2,10 @@
 
 All notable changes to `contracts` will be documented in this file.
 
+## #v1.1.2 - 2024-09-07
+
+fix ContractFactory
+
 ## #v1.1.1 - 2024-09-05
 
 refactor input attributes
