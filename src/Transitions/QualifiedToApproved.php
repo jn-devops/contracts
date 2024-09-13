@@ -13,6 +13,6 @@ class QualifiedToApproved extends ContractTransition
         $this->contract->approved = true;
         $this->contract->save();
 
-        return $this->contract;
+        return parent::handle();
     }
 }

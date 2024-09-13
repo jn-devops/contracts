@@ -13,6 +13,6 @@ class ConsultedToAvailed extends ContractTransition
         $this->contract->availed = true;
         $this->contract->save();
 
-        return $this->contract;
+        return parent::handle();
     }
 }

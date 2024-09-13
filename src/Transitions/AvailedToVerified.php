@@ -13,6 +13,6 @@ class AvailedToVerified extends ContractTransition
         $this->contract->verified = true;
         $this->contract->save();
 
-        return $this->contract;
+        return parent::handle();
     }
 }

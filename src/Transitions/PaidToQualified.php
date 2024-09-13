@@ -13,6 +13,6 @@ class PaidToQualified extends ContractTransition
         $this->contract->qualified = true;
         $this->contract->save();
 
-        return $this->contract;
+        return parent::handle();
     }
 }

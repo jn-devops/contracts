@@ -13,6 +13,6 @@ class VerifiedToOnboarded extends ContractTransition
         $this->contract->onboarded = true;
         $this->contract->save();
 
-        return $this->contract;
+        return parent::handle();
     }
 }

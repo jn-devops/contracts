@@ -1,6 +1,12 @@
 <?php
 
-// config for Homeful/Contracts
-return [
+use Homeful\Notifications\Notifications\PostPaymentBuyerNotification;
+use Homeful\Contracts\Transitions\OnboardedToPaid;
 
+return [
+    'notifications' => [
+        OnboardedToPaid::class => [
+            PostPaymentBuyerNotification::class
+        ],
+    ]
 ];

@@ -13,6 +13,6 @@ class PendingToConsulted extends ContractTransition
         $this->contract->consulted = true;
         $this->contract->save();
 
-        return $this->contract;
+        return parent::handle();
     }
 }

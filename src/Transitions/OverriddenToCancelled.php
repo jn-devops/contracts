@@ -13,6 +13,6 @@ class OverriddenToCancelled extends ContractTransition
         $this->contract->cancelled = true;
         $this->contract->save();
 
-        return $this->contract;
+        return parent::handle();
     }
 }

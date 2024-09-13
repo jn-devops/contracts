@@ -13,6 +13,6 @@ class QualifiedToDisapproved extends ContractTransition
         $this->contract->disapproved = true;
         $this->contract->save();
 
-        return $this->contract;
+        return parent::handle();
     }
 }

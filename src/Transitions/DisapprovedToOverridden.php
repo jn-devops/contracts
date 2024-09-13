@@ -13,6 +13,6 @@ class DisapprovedToOverridden extends ContractTransition
         $this->contract->overridden = true;
         $this->contract->save();
 
-        return $this->contract;
+        return parent::handle();
     }
 }
