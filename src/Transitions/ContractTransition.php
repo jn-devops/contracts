@@ -2,6 +2,7 @@
 
 namespace Homeful\Contracts\Transitions;
 
+use Homeful\References\Data\ReferenceData;
 use Homeful\References\Models\Reference;
 use Homeful\Contracts\Models\Contract;
 use Spatie\ModelStates\Transition;
@@ -9,9 +10,12 @@ use Spatie\ModelStates\Transition;
 abstract class ContractTransition extends Transition
 {
     protected Contract $contract;
+
     protected Reference $reference;
+
     protected string $reference_code;
 
+    protected string $notification_class;
 
     /**
      * @param Contract $contract
@@ -41,5 +45,20 @@ abstract class ContractTransition extends Transition
     public function getReferenceCode(): ?string
     {
         return $this->reference_code ?? null;
+    }
+
+    public function getReferenceData(): ?ReferenceData
+    {
+        $reference = $this->getReference();
+
+        return $reference ? ReferenceData::fromModel($reference) : null;
+    }
+
+    public function notify(): void
+    {
+        if (isset($this->notification_class))
+            if ($data = $this->getReferenceData()) {
+                $this->contract->customer->notify(new $this->notification_class($data));
+            }
     }
 }
