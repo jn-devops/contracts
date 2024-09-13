@@ -2,6 +2,10 @@
 
 All notable changes to `contracts` will be documented in this file.
 
+## #v1.2.0 - 2024-09-13
+
+add notifications
+
 ## #v1.1.2 - 2024-09-07
 
 fix ContractFactory
