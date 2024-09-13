@@ -5,7 +5,7 @@ namespace Homeful\Contracts\Transitions;
 use Homeful\Contracts\States\Qualified;
 use Homeful\Contracts\Models\Contract;
 
-class PaidToQualified extends ContractTransition
+class PrequalifiedToQualified extends ContractTransition
 {
     public function handle(): Contract
     {

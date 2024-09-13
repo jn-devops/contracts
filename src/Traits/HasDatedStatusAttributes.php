@@ -69,6 +69,71 @@ trait HasDatedStatusAttributes
             && $this->getAttribute('paid_at') <= now();
     }
 
+    public function setPaymentFailedAttribute(bool $value): self
+    {
+        $this->setAttribute('payment_failed_at', $value ? now() : null);
+
+        return $this;
+    }
+
+    public function getPaymentFailedAttribute(): bool
+    {
+        return $this->getAttribute('payment_failed_at')
+            && $this->getAttribute('payment_failed_at') <= now();
+    }
+
+    public function setAssignedAttribute(bool $value): self
+    {
+        $this->setAttribute('assigned_at', $value ? now() : null);
+
+        return $this;
+    }
+
+    public function getAssignedAttribute(): bool
+    {
+        return $this->getAttribute('assigned_at')
+            && $this->getAttribute('assigned_at') <= now();
+    }
+
+    public function setIdledAttribute(bool $value): self
+    {
+        $this->setAttribute('idled_at', $value ? now() : null);
+
+        return $this;
+    }
+
+    public function getIdledAttribute(): bool
+    {
+        return $this->getAttribute('idled_at')
+            && $this->getAttribute('idled_at') <= now();
+    }
+
+    public function setAcknowledgedAttribute(bool $value): self
+    {
+        $this->setAttribute('acknowledged_at', $value ? now() : null);
+
+        return $this;
+    }
+
+    public function getAcknowledgedAttribute(): bool
+    {
+        return $this->getAttribute('acknowledged_at')
+            && $this->getAttribute('acknowledged_at') <= now();
+    }
+
+    public function setPrequalifiedAttribute(bool $value): self
+    {
+        $this->setAttribute('prequalified_at', $value ? now() : null);
+
+        return $this;
+    }
+
+    public function getPrequalifiedAttribute(): bool
+    {
+        return $this->getAttribute('prequalified_at')
+            && $this->getAttribute('prequalified_at') <= now();
+    }
+
     public function setQualifiedAttribute(bool $value): self
     {
         $this->setAttribute('qualified_at', $value ? now() : null);
@@ -80,6 +145,19 @@ trait HasDatedStatusAttributes
     {
         return $this->getAttribute('qualified_at')
             && $this->getAttribute('qualified_at') <= now();
+    }
+
+    public function setNotQualifiedAttribute(bool $value): self
+    {
+        $this->setAttribute('not_qualified_at', $value ? now() : null);
+
+        return $this;
+    }
+
+    public function getNotQualifiedAttribute(): bool
+    {
+        return $this->getAttribute('not_qualified_at')
+            && $this->getAttribute('not_qualified_at') <= now();
     }
 
     public function setApprovedAttribute(bool $value): self
@@ -106,6 +184,19 @@ trait HasDatedStatusAttributes
     {
         return $this->getAttribute('disapproved_at')
             && $this->getAttribute('disapproved_at') <= now();
+    }
+
+    public function setValidatedAttribute(bool $value): self
+    {
+        $this->setAttribute('validated_at', $value ? now() : null);
+
+        return $this;
+    }
+
+    public function getValidatedAttribute(): bool
+    {
+        return $this->getAttribute('validated_at')
+            && $this->getAttribute('validated_at') <= now();
     }
 
     public function setOverriddenAttribute(bool $value): self

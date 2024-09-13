@@ -12,7 +12,6 @@ use Homeful\Contracts\Traits\HasInputRelations;
 use Homeful\Contracts\States\ContractState;
 use Illuminate\Database\Eloquent\Model;
 use Homeful\Common\Traits\HasMeta;
-use Homeful\Common\Classes\Input;
 use Spatie\ModelStates\HasStates;
 use Homeful\Mortgage\Mortgage;
 use Illuminate\Support\Carbon;
@@ -35,9 +34,16 @@ use Illuminate\Support\Carbon;
  * @property Carbon $verified_at
  * @property Carbon $onboarded_at
  * @property Carbon $paid_at
+ * @property Carbon $payment_failed_at
+ * @property Carbon $assigned_at
+ * @property Carbon $idled_at
+ * @property Carbon $acknowledged_at
+ * @property Carbon $prequalified_at
  * @property Carbon $qualified_at
+ * @property Carbon $not_qualified_at
  * @property Carbon $approved_at
  * @property Carbon $disapproved_at
+ * @property Carbon $validated_at
  * @property Carbon $overridden_at
  * @property Carbon $cancelled_at
  * @property bool $consulted
@@ -45,9 +51,16 @@ use Illuminate\Support\Carbon;
  * @property bool $verified
  * @property bool $onboarded
  * @property bool $paid
+ * @property bool $payment_failed
+ * @property bool $assigned
+ * @property bool $idled
+ * @property bool $acknowledged
+ * @property bool $prequalified
  * @property bool $qualified
+ * @property bool $not_qualified
  * @property bool $approved
  * @property bool $disapproved
+ * @property bool $validated
  * @property bool $overridden
  * @property bool $cancelled
  * @property SchemalessAttributes $meta
