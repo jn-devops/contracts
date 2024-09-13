@@ -2,7 +2,11 @@
 
 namespace Homeful\Contracts\Tests;
 
+use Homeful\Contracts\Providers\EventServiceProvider as ContractEventServiceProvider;
+use Homeful\KwYCCheck\KwYCCheckServiceProvider;
+use Homeful\KwYCCheck\Providers\EventServiceProvider as KyWCCheckEventServiceProvider;
 use Homeful\Mortgage\Providers\EventServiceProvider as MortgageEventServiceProvider;
+use Homeful\References\ReferencesServiceProvider;
 use Spatie\SchemalessAttributes\SchemalessAttributesServiceProvider;
 use Homeful\Contracts\Providers\EventServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -28,7 +32,19 @@ class TestCase extends Orchestra
             SchemalessAttributesServiceProvider::class,
             MortgageEventServiceProvider::class,
             ContactsServiceProvider::class,
-            EventServiceProvider::class
+            EventServiceProvider::class,
+
+            ReferencesServiceProvider::class,
+            KwYCCheckServiceProvider::class,
+            ContactsServiceProvider::class,
+            SchemalessAttributesServiceProvider::class,
+            KyWCCheckEventServiceProvider::class,
+            ContractsServiceProvider::class,
+            ContractsServiceProvider::class,
+            SchemalessAttributesServiceProvider::class,
+            MortgageEventServiceProvider::class,
+            ContactsServiceProvider::class,
+            ContractEventServiceProvider::class
         ];
     }
 

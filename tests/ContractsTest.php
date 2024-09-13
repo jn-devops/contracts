@@ -1,15 +1,21 @@
 <?php
 
-
+use Homeful\Notifications\Notifications\PostPaymentBuyerNotification;
+use Homeful\Contracts\Transitions\VerifiedToOnboarded;
+use Homeful\References\Actions\CreateReferenceAction;
 use Spatie\SchemalessAttributes\SchemalessAttributes;
 use Homeful\Properties\Models\Property as Inventory;
+use Homeful\Common\Classes\Input as InputFieldName;
 use Homeful\Contacts\Models\Contact as Customer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Foundation\Testing\WithFaker;
+use Spatie\ModelStates\Events\StateChanged;
 use Homeful\Properties\Data\PropertyData;
 use Homeful\Contracts\States\Disapproved;
 use Homeful\Contracts\States\Overridden;
 use Homeful\Contracts\Data\ContractData;
+use Homeful\References\Models\Reference;
 use Homeful\Contracts\States\Qualified;
 use Homeful\Contracts\States\Consulted;
 use Homeful\Contracts\States\Cancelled;
@@ -21,6 +27,7 @@ use Homeful\Contracts\States\Approved;
 use Homeful\Contracts\States\Verified;
 use Homeful\Contracts\States\Pending;
 use Homeful\Contracts\States\Availed;
+use Illuminate\Support\Facades\Event;
 use Homeful\Products\Models\Product;
 use Homeful\Contracts\States\Paid;
 use Homeful\Common\Classes\Input;
@@ -39,6 +46,10 @@ beforeEach(function () {
     $migration = include 'vendor/jn-devops/properties/database/migrations/create_properties_table.php.stub';
     $migration->up();
     $migration = include 'vendor/spatie/laravel-medialibrary/database/migrations/create_media_table.php.stub';
+    $migration->up();
+    $migration = include 'vendor/frittenkeez/laravel-vouchers/publishes/migrations/2018_06_12_000000_create_voucher_tables.php';
+    $migration->up();
+    $migration = include 'vendor/homeful/references/database/migrations/create_inputs_table.php.stub';
     $migration->up();
 });
 
@@ -267,8 +278,25 @@ it('has dated status', function() {
     expect($contract->cancelled_at->diffInMilliseconds($dt, true))->toBeLessThan(1);
 });
 
-it('has states', function() {
+dataset('reference', function () {
+    return [
+        [fn() => app(CreateReferenceAction::class)->run([
+            InputFieldName::PERCENT_DP => $this->faker->numberBetween(5, 10)/100,
+            InputFieldName::PERCENT_MF => $this->faker->numberBetween(8, 10)/100,
+            InputFieldName::DP_TERM => $this->faker->numberBetween(12, 24) * 1.00,
+            InputFieldName::BP_TERM => $this->faker->numberBetween(20, 30) * 1.00,
+            InputFieldName::BP_INTEREST_RATE => $this->faker->numberBetween(3, 7)/100,
+            InputFieldName::SELLER_COMMISSION_CODE => $this->faker->word(),
+        ], ['author' => 'Lester'])]
+    ];
+});
+
+it('has states', function(Reference $reference, Customer $customer) {
     $contract = new Contract;
+    $contract->customer = $customer;
+    $contract->save();
+    $contract->load('customer');
+
     expect($contract->state)->toBeInstanceOf(Pending::class);
 
     expect($contract->consulted)->toBeFalse();
@@ -286,15 +314,24 @@ it('has states', function() {
     expect($contract->state)->toBeInstanceOf(Verified::class);
     expect($contract->verified)->toBeTrue();
 
+    Event::fake(StateChanged::class);
     expect($contract->onboarded)->toBeFalse();
-    $contract->state->transitionTo(Onboarded::class);
+    $contract->state->transitionTo(Onboarded::class, reference: $reference);
     expect($contract->state)->toBeInstanceOf(Onboarded::class);
     expect($contract->onboarded)->toBeTrue();
+    Event::assertDispatched(StateChanged::class, function (StateChanged $state) use ($reference) {
+        return $state->transition instanceof VerifiedToOnboarded && $state->transition->getReferenceCode() == $reference->code;
+    });
 
+    Notification::fake();
     expect($contract->paid)->toBeFalse();
-    $contract->state->transitionTo(Paid::class);
+    $contract->state->transitionTo(Paid::class, reference: $reference);
     expect($contract->state)->toBeInstanceOf(Paid::class);
     expect($contract->paid)->toBeTrue();
+
+    Notification::assertSentTo($contract->customer, function(PostPaymentBuyerNotification $notification) use ($reference) {
+        return $notification->getReferenceData()->code == $reference->code;
+    });
 
     expect($contract->qualified)->toBeFalse();
     $contract->state->transitionTo(Qualified::class);
@@ -353,7 +390,7 @@ it('has states', function() {
     $contract->state->transitionTo(Cancelled::class);
     expect($contract->state)->toBeInstanceOf(Cancelled::class);
     expect($contract->cancelled)->toBeTrue();
-});
+})->with('reference', 'customer');
 
 it('has data', function(Customer $customer, Inventory $inventory, array $params) {
     $contract = new Contract;
