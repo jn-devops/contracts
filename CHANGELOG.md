@@ -2,6 +2,10 @@
 
 All notable changes to `contracts` will be documented in this file.
 
+## #v1.2.1 - 2024-09-13
+
+refactor add notification in base class
+
 ## #v1.2.0 - 2024-09-13
 
 add notifications
