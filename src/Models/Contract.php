@@ -15,11 +15,12 @@ use Homeful\Common\Traits\HasMeta;
 use Spatie\ModelStates\HasStates;
 use Homeful\Mortgage\Mortgage;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 /**
  * Class Contract
  *
- * @property int $id
+ * @property string $id
  * @property Customer $customer
  * @property Inventory $inventory
  * @property float $percent_down_payment
@@ -76,6 +77,10 @@ class Contract extends Model
     use HasMeta;
     use HasStates;
 
+    protected $keyType = 'string';
+
+    public $incrementing = false;
+
     protected $fillable = [
         'customer',
         'inventory',
@@ -86,6 +91,13 @@ class Contract extends Model
     protected $casts = [
         'state' => ContractState::class
     ];
+
+    public static function booted(): void
+    {
+        static::creating(function (Contract $contract) {
+            $contract->id = Str::uuid()->toString();
+        });
+    }
 
     /**
      * @param Mortgage $value

@@ -96,6 +96,7 @@ dataset('params', function() {
 
 it('has simple attributes', function () {
     with(Contract::factory()->create(), function ($contract) {
+        expect($contract->id)->toBeUuid();
         expect($contract->customer)->toBeInstanceOf(Customer::class);
         expect($contract->inventory)->toBeInstanceOf(Inventory::class);
         expect($contract->meta)->toBeInstanceOf(SchemalessAttributes::class);
