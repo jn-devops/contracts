@@ -94,8 +94,14 @@ dataset('params', function() {
     ];
 });
 
+it('has a settable id', function() {
+    with(Contract::factory()->create(['id' => '8b182ba6-842f-4531-9d38-920e5a904359']), function ($contract) {
+        expect($contract->id)->toBe('8b182ba6-842f-4531-9d38-920e5a904359');
+    });
+});
+
 it('has simple attributes', function () {
-    with(Contract::factory()->create(), function ($contract) {
+    with(Contract::factory()->create(['id' => '8b182ba6-842f-4531-9d38-920e5a904359']), function ($contract) {
         expect($contract->id)->toBeUuid();
         expect($contract->customer)->toBeInstanceOf(Customer::class);
         expect($contract->inventory)->toBeInstanceOf(Inventory::class);

@@ -95,7 +95,7 @@ class Contract extends Model
     public static function booted(): void
     {
         static::creating(function (Contract $contract) {
-            $contract->id = Str::uuid()->toString();
+            $contract->id = $contract->id ?: Str::uuid()->toString();
         });
     }
 
