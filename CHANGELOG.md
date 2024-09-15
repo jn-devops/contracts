@@ -2,6 +2,10 @@
 
 All notable changes to `contracts` will be documented in this file.
 
+## #v1.3.1 - 2024-09-15
+
+contract id can be filled.
+
 ## #v1.3.0 - 2024-09-15
 
 change id type from incrementing int to uuid
