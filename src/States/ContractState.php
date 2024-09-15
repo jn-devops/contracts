@@ -13,8 +13,10 @@ use Homeful\Contracts\Transitions\IdledToAcknowledged;
 use Homeful\Contracts\Transitions\OnboardedToPaid;
 use Homeful\Contracts\Transitions\OnboardedToPaymentFailed;
 use Homeful\Contracts\Transitions\OverriddenToCancelled;
+use Homeful\Contracts\Transitions\OverriddenToValidated;
 use Homeful\Contracts\Transitions\PaidToAssigned;
 use Homeful\Contracts\Transitions\PaymentFailedToPaid;
+use Homeful\Contracts\Transitions\PrequalifiedToNotQualified;
 use Homeful\Contracts\Transitions\PrequalifiedToQualified;
 use Homeful\Contracts\Transitions\QualifiedToApproved;
 use Homeful\Contracts\Transitions\QualifiedToDisapproved;
@@ -49,13 +51,16 @@ abstract class ContractState extends State
             ->allowTransition(Idled::class, Acknowledged::class, IdledToAcknowledged::class)
             ->allowTransition(Acknowledged::class, Prequalified::class, AcknowledgedToPrequalified::class)
             ->allowTransition(Prequalified::class, Qualified::class, PrequalifiedToQualified::class)
-            ->allowTransition(Prequalified::class, NotQualified::class, PrequalifiedToQualified::class)
+
+            ->allowTransition(Prequalified::class, NotQualified::class, PrequalifiedToNotQualified::class)
+
             ->allowTransition(Qualified::class, Approved::class, QualifiedToApproved::class)
             ->allowTransition(Qualified::class, Disapproved::class, QualifiedToDisapproved::class)
             ->allowTransition(Disapproved::class, Overridden::class, DisapprovedToOverridden::class)
             ->allowTransition(Approved::class, Validated::class, ApprovedToValidated::class)
             ->allowTransition(Approved::class, Cancelled::class, ApprovedToCancelled::class)
             ->allowTransition(Validated::class, Cancelled::class, ValidatedToCancelled::class)
+            ->allowTransition(Overridden::class, Validated::class, OverriddenToValidated::class)
             ->allowTransition(Overridden::class, Cancelled::class, OverriddenToCancelled::class)
             ;
     }

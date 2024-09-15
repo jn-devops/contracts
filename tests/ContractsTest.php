@@ -1,27 +1,35 @@
 <?php
 
+use Homeful\Contracts\Transitions\{
+    PendingToConsulted, ConsultedToAvailed, AvailedToVerified, VerifiedToOnboarded, OnboardedToPaid, OnboardedToPaymentFailed,
+    PaymentFailedToPaid, PaidToAssigned, AssignedToAcknowledged, AssignedToIdled, IdledToAcknowledged,
+    AcknowledgedToPrequalified, PrequalifiedToQualified, PrequalifiedToNotQualified,
+    QualifiedToApproved, QualifiedToDisapproved, DisapprovedToOverridden,
+    ApprovedToValidated, OverriddenToValidated,
+    ValidatedToCancelled
+};
 use Homeful\Notifications\Notifications\PostPaymentBuyerNotification;
-use Homeful\Contracts\Transitions\VerifiedToOnboarded;
 use Homeful\References\Actions\CreateReferenceAction;
 use Spatie\SchemalessAttributes\SchemalessAttributes;
 use Homeful\Properties\Models\Property as Inventory;
-
 use Homeful\Common\Classes\Input as InputFieldName;
-use Homeful\Contacts\Models\Contact as Customer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Homeful\Contacts\Models\Contact as Customer;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Foundation\Testing\WithFaker;
 use Spatie\ModelStates\Events\StateChanged;
 use Homeful\Contracts\States\PaymentFailed;
 use Homeful\Contracts\States\Prequalified;
 use Homeful\Contracts\States\NotQualified;
+use Homeful\Contracts\States\Acknowledged;
 use Homeful\Properties\Data\PropertyData;
 use Homeful\Contracts\States\Disapproved;
 use Homeful\Contracts\States\Overridden;
 use Homeful\Contracts\Data\ContractData;
 use Homeful\References\Models\Reference;
+use Homeful\Contracts\States\Validated;
 use Homeful\Contracts\States\Qualified;
-use Homeful\Contracts\States\Consulted;
+
 use Homeful\Contracts\States\Cancelled;
 use Homeful\Contracts\States\Onboarded;
 use Homeful\Mortgage\Data\MortgageData;
@@ -29,20 +37,20 @@ use Homeful\Contacts\Data\ContactData;
 use Homeful\Contracts\Models\Contract;
 use Homeful\Contracts\States\Approved;
 use Homeful\Contracts\States\Verified;
-use Homeful\Contracts\States\Pending;
+use Homeful\Contracts\States\Assigned;
+
 use Homeful\Contracts\States\Availed;
 use Illuminate\Support\Facades\Event;
 use Homeful\Products\Models\Product;
+use Homeful\Contracts\States\Idled;
 use Homeful\Contracts\States\Paid;
 use Homeful\Common\Classes\Input;
 use Homeful\Borrower\Borrower;
 use Homeful\Property\Property;
 use Homeful\Mortgage\Mortgage;
 use Illuminate\Support\Carbon;
-use Homeful\Contracts\States\Assigned;
-use Homeful\Contracts\States\Idled;
-use Homeful\Contracts\States\Acknowledged;
-use Homeful\Contracts\States\Validated;
+
+use Homeful\Contracts\States\{Pending, Consulted};
 
 uses(RefreshDatabase::class, WithFaker::class);
 
@@ -306,86 +314,134 @@ it('has states', function(Reference $reference, Customer $customer) {
     $contract->save();
     $contract->load('customer');
 
+    Event::fake(StateChanged::class);
+
+    /** happy path */
     expect($contract->state)->toBeInstanceOf(Pending::class);
 
     expect($contract->consulted)->toBeFalse();
-    $contract->state->transitionTo(Consulted::class);
+    $contract->state->transitionTo(Consulted::class, reference: $reference);
+    Event::assertDispatched(StateChanged::class, function (StateChanged $state) use ($reference) {
+        return $state->transition instanceof PendingToConsulted && $state->transition->getReferenceCode() == $reference->code;
+    });
     expect($contract->state)->toBeInstanceOf(Consulted::class);
     expect($contract->consulted)->toBeTrue();
 
     expect($contract->availed)->toBeFalse();
-    $contract->state->transitionTo(Availed::class);
+    $contract->state->transitionTo(Availed::class, reference: $reference);
+    Event::assertDispatched(StateChanged::class, function (StateChanged $state) use ($reference) {
+        return $state->transition instanceof ConsultedToAvailed && $state->transition->getReferenceCode() == $reference->code;
+    });
     expect($contract->state)->toBeInstanceOf(Availed::class);
     expect($contract->availed)->toBeTrue();
 
     expect($contract->verified)->toBeFalse();
-    $contract->state->transitionTo(Verified::class);
+    $contract->state->transitionTo(Verified::class, reference: $reference);
+    Event::assertDispatched(StateChanged::class, function (StateChanged $state) use ($reference) {
+        return $state->transition instanceof AvailedToVerified && $state->transition->getReferenceCode() == $reference->code;
+    });
     expect($contract->state)->toBeInstanceOf(Verified::class);
     expect($contract->verified)->toBeTrue();
 
-//    Event::fake(StateChanged::class);
     expect($contract->onboarded)->toBeFalse();
     $contract->state->transitionTo(Onboarded::class, reference: $reference);
+    Event::assertDispatched(StateChanged::class, function (StateChanged $state) use ($reference) {
+        return $state->transition instanceof VerifiedToOnboarded && $state->transition->getReferenceCode() == $reference->code;
+    });
     expect($contract->state)->toBeInstanceOf(Onboarded::class);
     expect($contract->onboarded)->toBeTrue();
-//    Event::assertDispatched(StateChanged::class, function (StateChanged $state) use ($reference) {
-//        return $state->transition instanceof VerifiedToOnboarded && $state->transition->getReferenceCode() == $reference->code;
-//    });
 
     expect($contract->paid)->toBeFalse();
     $contract->state->transitionTo(Paid::class, reference: $reference);
+    Event::assertDispatched(StateChanged::class, function (StateChanged $state) use ($reference) {
+        return $state->transition instanceof OnboardedToPaid && $state->transition->getReferenceCode() == $reference->code;
+    });
     expect($contract->state)->toBeInstanceOf(Paid::class);
     expect($contract->paid)->toBeTrue();
 
-//    Notification::assertSentTo($contract->customer, function(PostPaymentBuyerNotification $notification) use ($reference) {
-//        return $notification->getReferenceData()->code == $reference->code;
-//    });
+    Notification::assertSentTo($contract->customer, function(PostPaymentBuyerNotification $notification) use ($reference) {
+        return $notification->getReferenceData()->code == $reference->code;
+    });
 
     expect($contract->assigned)->toBeFalse();
-    $contract->state->transitionTo(Assigned::class);
+    $contract->state->transitionTo(Assigned::class, reference: $reference);
+    Event::assertDispatched(StateChanged::class, function (StateChanged $state) use ($reference) {
+        return $state->transition instanceof PaidToAssigned && $state->transition->getReferenceCode() == $reference->code;
+    });
     expect($contract->state)->toBeInstanceOf(Assigned::class);
     expect($contract->assigned)->toBeTrue();
 
     expect($contract->acknowledged)->toBeFalse();
-    $contract->state->transitionTo(Acknowledged::class);
+    $contract->state->transitionTo(Acknowledged::class, reference: $reference);
+    Event::assertDispatched(StateChanged::class, function (StateChanged $state) use ($reference) {
+        return $state->transition instanceof AssignedToAcknowledged && $state->transition->getReferenceCode() == $reference->code;
+    });
     expect($contract->state)->toBeInstanceOf(Acknowledged::class);
     expect($contract->acknowledged)->toBeTrue();
 
     expect($contract->prequalified)->toBeFalse();
-    $contract->state->transitionTo(Prequalified::class);
+    $contract->state->transitionTo(Prequalified::class, reference: $reference);
+    Event::assertDispatched(StateChanged::class, function (StateChanged $state) use ($reference) {
+        return $state->transition instanceof AcknowledgedToPrequalified && $state->transition->getReferenceCode() == $reference->code;
+    });
     expect($contract->state)->toBeInstanceOf(Prequalified::class);
     expect($contract->prequalified)->toBeTrue();
 
     expect($contract->qualified)->toBeFalse();
-    $contract->state->transitionTo(Qualified::class);
+    $contract->state->transitionTo(Qualified::class, reference: $reference);
+    Event::assertDispatched(StateChanged::class, function (StateChanged $state) use ($reference) {
+        return $state->transition instanceof PrequalifiedToQualified && $state->transition->getReferenceCode() == $reference->code;
+    });
     expect($contract->state)->toBeInstanceOf(Qualified::class);
     expect($contract->qualified)->toBeTrue();
 
     expect($contract->approved)->toBeFalse();
-    $contract->state->transitionTo(Approved::class);
+    $contract->state->transitionTo(Approved::class, reference: $reference);
+    Event::assertDispatched(StateChanged::class, function (StateChanged $state) use ($reference) {
+        return $state->transition instanceof QualifiedToApproved && $state->transition->getReferenceCode() == $reference->code;
+    });
     expect($contract->state)->toBeInstanceOf(Approved::class);
     expect($contract->approved)->toBeTrue();
 
     expect($contract->validated)->toBeFalse();
-    $contract->state->transitionTo(Validated::class);
+    $contract->state->transitionTo(Validated::class, reference: $reference);
+    Event::assertDispatched(StateChanged::class, function (StateChanged $state) use ($reference) {
+        return $state->transition instanceof ApprovedToValidated && $state->transition->getReferenceCode() == $reference->code;
+    });
     expect($contract->state)->toBeInstanceOf(Validated::class);
     expect($contract->validated)->toBeTrue();
 
     expect($contract->cancelled)->toBeFalse();
-    $contract->state->transitionTo(Cancelled::class);
+    $contract->state->transitionTo(Cancelled::class, reference: $reference);
+    Event::assertDispatched(StateChanged::class, function (StateChanged $state) use ($reference) {
+        return $state->transition instanceof ValidatedToCancelled && $state->transition->getReferenceCode() == $reference->code;
+    });
     expect($contract->state)->toBeInstanceOf(Cancelled::class);
     expect($contract->cancelled)->toBeTrue();
 
-    /** payment failed */
+    /** payment failed then paid */
     $contract = new Contract;
     $contract->state->transitionTo(Consulted::class);
     $contract->state->transitionTo(Availed::class);
     $contract->state->transitionTo(Verified::class);
     $contract->state->transitionTo(Onboarded::class);
-    $contract->state->transitionTo(PaymentFailed::class);
-    $contract->state->transitionTo(Paid::class);
+    expect($contract->payment_failed)->toBeFalse();
+    $contract->state->transitionTo(PaymentFailed::class, reference: $reference);
+    Event::assertDispatched(StateChanged::class, function (StateChanged $state) use ($reference) {
+        return $state->transition instanceof OnboardedToPaymentFailed && $state->transition->getReferenceCode() == $reference->code;
+    });
+    expect($contract->state)->toBeInstanceOf(PaymentFailed::class);
+    expect($contract->payment_failed)->toBeTrue();
 
-    /** acknowledged */
+    expect($contract->paid)->toBeFalse();
+    $contract->state->transitionTo(Paid::class, reference: $reference);
+    Event::assertDispatched(StateChanged::class, function (StateChanged $state) use ($reference) {
+        return $state->transition instanceof PaymentFailedToPaid && $state->transition->getReferenceCode() == $reference->code;
+    });
+    expect($contract->state)->toBeInstanceOf(Paid::class);
+    expect($contract->paid)->toBeTrue();
+
+    /** idled then acknowledged */
     $contract = new Contract;
     $contract->state->transitionTo(Consulted::class);
     $contract->state->transitionTo(Availed::class);
@@ -393,20 +449,24 @@ it('has states', function(Reference $reference, Customer $customer) {
     $contract->state->transitionTo(Onboarded::class);
     $contract->state->transitionTo(Paid::class);
     $contract->state->transitionTo(Assigned::class);
-    $contract->state->transitionTo(Acknowledged::class);
 
-    /** idled */
-    $contract = new Contract;
-    $contract->state->transitionTo(Consulted::class);
-    $contract->state->transitionTo(Availed::class);
-    $contract->state->transitionTo(Verified::class);
-    $contract->state->transitionTo(Onboarded::class);
-    $contract->state->transitionTo(Paid::class);
-    $contract->state->transitionTo(Assigned::class);
-    $contract->state->transitionTo(Idled::class);
-    $contract->state->transitionTo(Acknowledged::class);
+    expect($contract->idled)->toBeFalse();
+    $contract->state->transitionTo(Idled::class, reference: $reference);
+    Event::assertDispatched(StateChanged::class, function (StateChanged $state) use ($reference) {
+        return $state->transition instanceof AssignedToIdled && $state->transition->getReferenceCode() == $reference->code;
+    });
+    expect($contract->state)->toBeInstanceOf(Idled::class);
+    expect($contract->idled)->toBeTrue();
 
-    /** not qualified */
+    expect($contract->acknowledged)->toBeFalse();
+    $contract->state->transitionTo(Acknowledged::class, reference: $reference);
+    Event::assertDispatched(StateChanged::class, function (StateChanged $state) use ($reference) {
+        return $state->transition instanceof IdledToAcknowledged && $state->transition->getReferenceCode() == $reference->code;
+    });
+    expect($contract->state)->toBeInstanceOf(Acknowledged::class);
+    expect($contract->acknowledged)->toBeTrue();
+
+    /** disapproved but overridden then validated */
     $contract = new Contract;
     $contract->state->transitionTo(Consulted::class);
     $contract->state->transitionTo(Availed::class);
@@ -416,16 +476,31 @@ it('has states', function(Reference $reference, Customer $customer) {
     $contract->state->transitionTo(Assigned::class);
     $contract->state->transitionTo(Acknowledged::class);
     $contract->state->transitionTo(Prequalified::class);
+    $contract->state->transitionTo(Qualified::class);
 
-//    expect($contract->overridden)->toBeFalse();
-//    $contract->state->transitionTo(Overridden::class);
-//    expect($contract->state)->toBeInstanceOf(Overridden::class);
-//    expect($contract->overridden)->toBeTrue();
-//
-//    expect($contract->cancelled)->toBeFalse();
-//    $contract->state->transitionTo(Cancelled::class);
-//    expect($contract->state)->toBeInstanceOf(Cancelled::class);
-//    expect($contract->cancelled)->toBeTrue();
+    expect($contract->disapproved)->toBeFalse();
+    $contract->state->transitionTo(Disapproved::class, reference: $reference);
+    Event::assertDispatched(StateChanged::class, function (StateChanged $state) use ($reference) {
+        return $state->transition instanceof QualifiedToDisapproved && $state->transition->getReferenceCode() == $reference->code;
+    });
+    expect($contract->state)->toBeInstanceOf(Disapproved::class);
+    expect($contract->disapproved)->toBeTrue();
+
+    expect($contract->overridden)->toBeFalse();
+    $contract->state->transitionTo(Overridden::class, reference: $reference);
+    Event::assertDispatched(StateChanged::class, function (StateChanged $state) use ($reference) {
+        return $state->transition instanceof DisapprovedToOverridden && $state->transition->getReferenceCode() == $reference->code;
+    });
+    expect($contract->state)->toBeInstanceOf(Overridden::class);
+    expect($contract->overridden)->toBeTrue();
+
+    expect($contract->validated)->toBeFalse();
+    $contract->state->transitionTo(Validated::class, reference: $reference);
+    Event::assertDispatched(StateChanged::class, function (StateChanged $state) use ($reference) {
+        return $state->transition instanceof OverriddenToValidated && $state->transition->getReferenceCode() == $reference->code;
+    });
+    expect($contract->state)->toBeInstanceOf(Validated::class);
+    expect($contract->validated)->toBeTrue();
 
     /** failed */
     $contract = new Contract;
@@ -437,22 +512,14 @@ it('has states', function(Reference $reference, Customer $customer) {
     $contract->state->transitionTo(Assigned::class);
     $contract->state->transitionTo(Acknowledged::class);
     $contract->state->transitionTo(Prequalified::class);
-    $contract->state->transitionTo(NotQualified::class);
 
-    expect($contract->disapproved)->toBeFalse();
-    $contract->state->transitionTo(Disapproved::class);
-    expect($contract->state)->toBeInstanceOf(Disapproved::class);
-    expect($contract->disapproved)->toBeTrue();
-
-    expect($contract->overridden)->toBeFalse();
-    $contract->state->transitionTo(Overridden::class);
-    expect($contract->state)->toBeInstanceOf(Overridden::class);
-    expect($contract->overridden)->toBeTrue();
-
-    expect($contract->cancelled)->toBeFalse();
-    $contract->state->transitionTo(Cancelled::class);
-    expect($contract->state)->toBeInstanceOf(Cancelled::class);
-    expect($contract->cancelled)->toBeTrue();
+    expect($contract->not_qualified)->toBeFalse();
+    $contract->state->transitionTo(NotQualified::class, reference: $reference);
+    Event::assertDispatched(StateChanged::class, function (StateChanged $state) use ($reference) {
+        return $state->transition instanceof PrequalifiedToNotQualified && $state->transition->getReferenceCode() == $reference->code;
+    });
+    expect($contract->state)->toBeInstanceOf(NotQualified::class);
+    expect($contract->not_qualified)->toBeTrue();
 })->with('reference', 'customer');
 
 it('has data', function(Customer $customer, Inventory $inventory, array $params) {
