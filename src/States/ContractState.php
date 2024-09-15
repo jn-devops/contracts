@@ -64,4 +64,6 @@ abstract class ContractState extends State
             ->allowTransition(Overridden::class, Cancelled::class, OverriddenToCancelled::class)
             ;
     }
+
+    abstract public function name(): string;
 }

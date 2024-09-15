@@ -532,6 +532,7 @@ it('has data', function(Customer $customer, Inventory $inventory, array $params)
     $contract->balance_payment_term = $params[Input::BP_TERM];
     $contract->interest_rate = $params[Input::BP_INTEREST_RATE];
     $contract->save();
+    $contract->state->transitionTo(Consulted::class);
     $contract->load('customer', 'inventory');
     $borrower = (new Borrower)->setGrossMonthlyIncome($customer->getGrossMonthlyIncome())->setBirthdate($customer->getBirthdate());
     $property = (new Property)->setTotalContractPrice($inventory->product->getTotalContractPrice())->setAppraisedValue($inventory->product->getAppraisedValue());
@@ -542,8 +543,8 @@ it('has data', function(Customer $customer, Inventory $inventory, array $params)
         expect($data->customer)->toBeInstanceOf(ContactData::class);
         expect($data->inventory)->toBeInstanceOf(PropertyData::class);
         expect($data->mortgage)->toBeInstanceOf(MortgageData::class);
-        expect($data->state)->toBe(Pending::class);
-        expect($data->consulted_at)->toBeNull();
+        expect($data->state)->toBe('consulted');
+        expect($data->consulted_at)->toBeInstanceOf(Carbon::class);
         expect($data->availed_at)->toBeNull();
         expect($data->verified_at)->toBeNull();
         expect($data->onboarded_at)->toBeNull();
@@ -552,7 +553,7 @@ it('has data', function(Customer $customer, Inventory $inventory, array $params)
         expect($data->disapproved_at)->toBeNull();
         expect($data->overridden_at)->toBeNull();
         expect($data->cancelled_at)->toBeNull();
-        expect($data->consulted)->toBeFalse();
+        expect($data->consulted)->toBeTrue();
         expect($data->availed)->toBeFalse();
         expect($data->verified)->toBeFalse();
         expect($data->onboarded)->toBeFalse();

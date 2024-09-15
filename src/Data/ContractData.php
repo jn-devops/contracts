@@ -44,7 +44,7 @@ class ContractData extends Data
             customer: ContactData::fromModel($contract->customer),
             inventory: PropertyData::fromModel($contract->inventory),
             mortgage: MortgageData::fromObject($contract->mortgage),
-            state: $contract->state->getValue(),
+            state: $contract->state->name(), //$contract->state->getValue(),
             consulted_at: $contract->consulted_at,
             availed_at: $contract->availed_at,
             verified_at: $contract->verified_at,
