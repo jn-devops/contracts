@@ -25,7 +25,6 @@ class ContractFactory extends Factory
             'down_payment_term' => $this->faker->numberBetween(12, 24) * 1.00,
             'balance_payment_term' => $this->faker->numberBetween(20, 30) * 1.00,
             'interest_rate' => $this->faker->numberBetween(3, 7)/100,
-            'reference_code' => $this->faker->uuid(),
             'seller_commission_code' => $this->faker->word(),
         ];
     }

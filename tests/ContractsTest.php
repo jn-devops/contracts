@@ -111,8 +111,8 @@ it('has simple attributes', function () {
         expect($contract->paid)->toBeBool();
         expect($contract->approved)->toBeBool();
         expect($contract->cancelled)->toBeBool();
-        expect($contract->reference_code)->toBeString();
         expect($contract->seller_commission_code)->toBeString();
+        expect($contract->reference_code)->toBeNull();//there should not be any reference code in contract
     });
 });
 
@@ -127,7 +127,6 @@ it('has optional attributes', function(Customer $customer, Inventory $inventory,
         $contract->interest_rate = $params[Input::BP_INTEREST_RATE];
         $contract->save();
         expect($contract->seller_commission_code)->toBeNull();
-        expect($contract->reference_code)->toBeNull();
         expect($contract->consulted)->toBeFalse();
         expect($contract->availed)->toBeFalse();
         expect($contract->verified)->toBeFalse();
@@ -140,7 +139,6 @@ it('has optional attributes', function(Customer $customer, Inventory $inventory,
         expect($contract)->toBeInstanceOf(Contract::class);
         expect($contract->customer)->toBeInstanceOf(Customer::class);
         expect($contract->inventory)->toBeInstanceOf(Inventory::class);
-//        UpdateMortgage::run($contract);
         expect($contract->mortgage)->toBeInstanceOf(Mortgage::class);
     });
 

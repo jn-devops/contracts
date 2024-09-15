@@ -65,7 +65,6 @@ use Illuminate\Support\Carbon;
  * @property bool $cancelled
  * @property SchemalessAttributes $meta
  * @property string $seller_commission_code
- * @property string $reference_code
  *
  * @method Model create()
  * @method int getKey()

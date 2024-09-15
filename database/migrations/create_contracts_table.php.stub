@@ -10,7 +10,6 @@ return new class extends Migration
     {
         Schema::create('contracts', function (Blueprint $table) {
             $table->id();
-            $table->string('reference_code')->nullable()->index();
             $table->integer('contact_id')->nullable()->index();
             $table->string('property_code')->nullable()->index();
             $table->string('seller_commission_code')->nullable()->index();
