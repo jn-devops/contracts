@@ -18,9 +18,10 @@
     "require": {
         "php": "^8.2",
         "homeful/notifications": "^v1.2",
+        "homeful/references": "^1.1",
         "illuminate/contracts": "^10.0||^11.0",
         "jn-devops/borrower": "^1.0",
-        "jn-devops/common": "^1.1",
+        "jn-devops/common": "^1.2",
         "jn-devops/contacts": "^1.4",
         "jn-devops/mortgage": "^1.0",
         "jn-devops/properties": "^1.0",
