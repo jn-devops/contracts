@@ -2,6 +2,10 @@
 
 All notable changes to `contracts` will be documented in this file.
 
+## #v1.3.4 - 2024-09-17
+
+add qr_code_url parameter to VerifiedToOnboarded transition'
+
 ## #v1.3.3 - 2024-09-17
 
 tested state transition notifications'
