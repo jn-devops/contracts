@@ -1,103 +1,108 @@
 <?php
 
-use Homeful\Notifications\Notifications\VerifiedToOnboardedBuyerNotification;
-use Homeful\Notifications\Notifications\OnboardedToPaidBuyerNotification;
-use Homeful\Notifications\Notifications\OnboardedToPaymentFailedBuyerNotification;
-use Homeful\Notifications\Notifications\PaymentFailedToPaidBuyerNotification;
-use Homeful\Notifications\Notifications\PaidToAssignedBuyerNotification;
-use Homeful\Notifications\Notifications\AssignedToIdledBuyerNotification;
-use Homeful\Notifications\Notifications\AssignedToAcknowledgedBuyerNotification;
-use Homeful\Notifications\Notifications\IdledToAcknowledgedBuyerNotification;
-use Homeful\Notifications\Notifications\AcknowledgedToPrequalifiedBuyerNotification;
-use Homeful\Notifications\Notifications\PrequalifiedToQualifiedBuyerNotification;
-use Homeful\Notifications\Notifications\PrequalifiedToNotQualifiedBuyerNotification;
-use Homeful\Notifications\Notifications\QualifiedToApprovedBuyerNotification;
-use Homeful\Notifications\Notifications\QualifiedToDisapprovedBuyerNotification;
-use Homeful\Notifications\Notifications\DisapprovedToOverriddenBuyerNotification;
-use Homeful\Notifications\Notifications\ApprovedToValidatedBuyerNotification;
-use Homeful\Notifications\Notifications\ApprovedToCancelledBuyerNotification;
-use Homeful\Notifications\Notifications\ValidatedToCancelledBuyerNotification;
-use Homeful\Notifications\Notifications\OverriddenToValidatedBuyerNotification;
-use Homeful\Notifications\Notifications\OverriddenToCancelledBuyerNotification;
-use Homeful\Contracts\Transitions\VerifiedToOnboarded;
-use Homeful\Contracts\Transitions\OnboardedToPaid;
-use Homeful\Contracts\Transitions\OnboardedToPaymentFailed;
-use Homeful\Contracts\Transitions\PaymentFailedToPaid;
-use Homeful\Contracts\Transitions\PaidToAssigned;
-use Homeful\Contracts\Transitions\AssignedToIdled;
-use Homeful\Contracts\Transitions\AssignedToAcknowledged;
-use Homeful\Contracts\Transitions\IdledToAcknowledged;
-use Homeful\Contracts\Transitions\AcknowledgedToPrequalified;
-use Homeful\Contracts\Transitions\PrequalifiedToQualified;
-use Homeful\Contracts\Transitions\PrequalifiedToNotQualified;
-use Homeful\Contracts\Transitions\QualifiedToApproved;
-use Homeful\Contracts\Transitions\QualifiedToDisapproved;
-use Homeful\Contracts\Transitions\DisapprovedToOverridden;
-use Homeful\Contracts\Transitions\ApprovedToValidated;
-use Homeful\Contracts\Transitions\ApprovedToCancelled;
-use Homeful\Contracts\Transitions\ValidatedToCancelled;
-use Homeful\Contracts\Transitions\OverriddenToValidated;
-use Homeful\Contracts\Transitions\OverriddenToCancelled;
+use Homeful\Notifications\Notifications\{
+    VerifiedToOnboardedBuyerNotification,
+    OnboardedToPaidBuyerNotification,
+    OnboardedToPaymentFailedBuyerNotification,
+    PaymentFailedToPaidBuyerNotification,
+    PaidToAssignedBuyerNotification,
+    AssignedToIdledBuyerNotification,
+    AssignedToAcknowledgedBuyerNotification,
+    IdledToAcknowledgedBuyerNotification,
+    AcknowledgedToPrequalifiedBuyerNotification,
+    PrequalifiedToQualifiedBuyerNotification,
+    PrequalifiedToNotQualifiedBuyerNotification,
+    QualifiedToApprovedBuyerNotification,
+    QualifiedToDisapprovedBuyerNotification,
+    DisapprovedToOverriddenBuyerNotification,
+    ApprovedToValidatedBuyerNotification,
+    ApprovedToCancelledBuyerNotification,
+    ValidatedToCancelledBuyerNotification,
+    OverriddenToValidatedBuyerNotification,
+    OverriddenToCancelledBuyerNotification
+};
 
+use Homeful\Contracts\Transitions\{
+    VerifiedToOnboarded,
+    OnboardedToPaid,
+    OnboardedToPaymentFailed,
+    PaymentFailedToPaid,
+    PaidToAssigned,
+    AssignedToIdled,
+    AssignedToAcknowledged,
+    IdledToAcknowledged,
+    AcknowledgedToPrequalified,
+    PrequalifiedToQualified,
+    PrequalifiedToNotQualified,
+    QualifiedToApproved,
+    QualifiedToDisapproved,
+    DisapprovedToOverridden,
+    ApprovedToValidated,
+    ApprovedToCancelled,
+    ValidatedToCancelled,
+    OverriddenToValidated,
+    OverriddenToCancelled
+};
 
 return [
     'notifications' => [
+        VerifiedToOnboarded::class => [
+            VerifiedToOnboardedBuyerNotification::class
+        ],
         OnboardedToPaid::class => [
-            OnboardedToPaidBuyerNotification::class,
+            OnboardedToPaidBuyerNotification::class
         ],
         OnboardedToPaymentFailed::class => [
-            OnboardedToPaymentFailedBuyerNotification::class,
+            OnboardedToPaymentFailedBuyerNotification::class
         ],
         PaymentFailedToPaid::class => [
-            PaymentFailedToPaidBuyerNotification::class,
+            PaymentFailedToPaidBuyerNotification::class
         ],
         PaidToAssigned::class => [
-            PaidToAssignedBuyerNotification::class,
+            PaidToAssignedBuyerNotification::class
         ],
         AssignedToIdled::class => [
-            AssignedToIdledBuyerNotification::class,
+            AssignedToIdledBuyerNotification::class
         ],
         AssignedToAcknowledged::class => [
-            AssignedToAcknowledgedBuyerNotification::class,
+            AssignedToAcknowledgedBuyerNotification::class
         ],
         IdledToAcknowledged::class => [
-            IdledToAcknowledgedBuyerNotification::class,
+            IdledToAcknowledgedBuyerNotification::class
         ],
         AcknowledgedToPrequalified::class => [
-            AcknowledgedToPrequalifiedBuyerNotification::class,
+            AcknowledgedToPrequalifiedBuyerNotification::class
         ],
         PrequalifiedToQualified::class => [
-            PrequalifiedToQualifiedBuyerNotification::class,
+            PrequalifiedToQualifiedBuyerNotification::class
         ],
         PrequalifiedToNotQualified::class => [
-            PrequalifiedToNotQualifiedBuyerNotification::class,
+            PrequalifiedToNotQualifiedBuyerNotification::class
         ],
         QualifiedToApproved::class => [
-            QualifiedToApprovedBuyerNotification::class,
+            QualifiedToApprovedBuyerNotification::class
         ],
         QualifiedToDisapproved::class => [
-            QualifiedToDisapprovedBuyerNotification::class,
+            QualifiedToDisapprovedBuyerNotification::class
         ],
         DisapprovedToOverridden::class => [
-            DisapprovedToOverriddenBuyerNotification::class,
+            DisapprovedToOverriddenBuyerNotification::class
         ],
         ApprovedToValidated::class => [
-            ApprovedToValidatedBuyerNotification::class,
+            ApprovedToValidatedBuyerNotification::class
         ],
         ApprovedToCancelled::class => [
-            ApprovedToCancelledBuyerNotification::class,
+            ApprovedToCancelledBuyerNotification::class
         ],
         ValidatedToCancelled::class => [
-            ValidatedToCancelledBuyerNotification::class,
+            ValidatedToCancelledBuyerNotification::class
         ],
         OverriddenToValidated::class => [
-            OverriddenToValidatedBuyerNotification::class,
+            OverriddenToValidatedBuyerNotification::class
         ],
         OverriddenToCancelled::class => [
-            OverriddenToCancelledBuyerNotification::class,
+            OverriddenToCancelledBuyerNotification::class
         ],
     ]
 ];
-
-<?php
 

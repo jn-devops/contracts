@@ -8,7 +8,26 @@ use Homeful\Contracts\Transitions\{
     ApprovedToValidated, OverriddenToValidated,
     ValidatedToCancelled
 };
-use Homeful\Notifications\Notifications\PostPaymentBuyerNotification;
+use Homeful\Notifications\Notifications\AcknowledgedToPrequalifiedBuyerNotification;
+use Homeful\Notifications\Notifications\PrequalifiedToNotQualifiedBuyerNotification;
+use Homeful\Notifications\Notifications\OnboardedToPaymentFailedBuyerNotification;
+use Homeful\Notifications\Notifications\PrequalifiedToQualifiedBuyerNotification;
+use Homeful\Notifications\Notifications\DisapprovedToOverriddenBuyerNotification;
+use Homeful\Notifications\Notifications\QualifiedToDisapprovedBuyerNotification;
+use Homeful\Notifications\Notifications\AssignedToAcknowledgedBuyerNotification;
+use Homeful\Notifications\Notifications\OverriddenToValidatedBuyerNotification;
+use Homeful\Notifications\Notifications\OverriddenToCancelledBuyerNotification;
+use Homeful\Notifications\Notifications\ValidatedToCancelledBuyerNotification;
+use Homeful\Notifications\Notifications\PaymentFailedToPaidBuyerNotification;
+use Homeful\Notifications\Notifications\QualifiedToApprovedBuyerNotification;
+use Homeful\Notifications\Notifications\VerifiedToOnboardedBuyerNotification;
+use Homeful\Notifications\Notifications\ApprovedToValidatedBuyerNotification;
+use Homeful\Notifications\Notifications\ApprovedToCancelledBuyerNotification;
+use Homeful\Notifications\Notifications\IdledToAcknowledgedBuyerNotification;
+use Homeful\Notifications\Notifications\OnboardedToPaidBuyerNotification;
+use Homeful\Notifications\Notifications\AssignedToIdledBuyerNotification;
+use Homeful\Notifications\Notifications\PaidToAssignedBuyerNotification;
+
 use Homeful\References\Actions\CreateReferenceAction;
 use Spatie\SchemalessAttributes\SchemalessAttributes;
 use Homeful\Properties\Models\Property as Inventory;
@@ -359,6 +378,9 @@ it('has states', function(Reference $reference, Customer $customer) {
     });
     expect($contract->state)->toBeInstanceOf(Onboarded::class);
     expect($contract->onboarded)->toBeTrue();
+    Notification::assertSentTo($contract->customer, function(VerifiedToOnboardedBuyerNotification $notification) use ($reference) {
+        return $notification->getReferenceData()->code == $reference->code;
+    });
 
     expect($contract->paid)->toBeFalse();
     $contract->state->transitionTo(Paid::class, reference: $reference);
@@ -367,8 +389,7 @@ it('has states', function(Reference $reference, Customer $customer) {
     });
     expect($contract->state)->toBeInstanceOf(Paid::class);
     expect($contract->paid)->toBeTrue();
-
-    Notification::assertSentTo($contract->customer, function(PostPaymentBuyerNotification $notification) use ($reference) {
+    Notification::assertSentTo($contract->customer, function(OnboardedToPaidBuyerNotification $notification) use ($reference) {
         return $notification->getReferenceData()->code == $reference->code;
     });
 
@@ -379,6 +400,9 @@ it('has states', function(Reference $reference, Customer $customer) {
     });
     expect($contract->state)->toBeInstanceOf(Assigned::class);
     expect($contract->assigned)->toBeTrue();
+    Notification::assertSentTo($contract->customer, function(PaidToAssignedBuyerNotification $notification) use ($reference) {
+        return $notification->getReferenceData()->code == $reference->code;
+    });
 
     expect($contract->acknowledged)->toBeFalse();
     $contract->state->transitionTo(Acknowledged::class, reference: $reference);
@@ -387,6 +411,9 @@ it('has states', function(Reference $reference, Customer $customer) {
     });
     expect($contract->state)->toBeInstanceOf(Acknowledged::class);
     expect($contract->acknowledged)->toBeTrue();
+    Notification::assertSentTo($contract->customer, function(AssignedToAcknowledgedBuyerNotification $notification) use ($reference) {
+        return $notification->getReferenceData()->code == $reference->code;
+    });
 
     expect($contract->prequalified)->toBeFalse();
     $contract->state->transitionTo(Prequalified::class, reference: $reference);
@@ -395,6 +422,9 @@ it('has states', function(Reference $reference, Customer $customer) {
     });
     expect($contract->state)->toBeInstanceOf(Prequalified::class);
     expect($contract->prequalified)->toBeTrue();
+    Notification::assertSentTo($contract->customer, function(AcknowledgedToPrequalifiedBuyerNotification $notification) use ($reference) {
+        return $notification->getReferenceData()->code == $reference->code;
+    });
 
     expect($contract->qualified)->toBeFalse();
     $contract->state->transitionTo(Qualified::class, reference: $reference);
@@ -403,6 +433,9 @@ it('has states', function(Reference $reference, Customer $customer) {
     });
     expect($contract->state)->toBeInstanceOf(Qualified::class);
     expect($contract->qualified)->toBeTrue();
+    Notification::assertSentTo($contract->customer, function(PrequalifiedToQualifiedBuyerNotification $notification) use ($reference) {
+        return $notification->getReferenceData()->code == $reference->code;
+    });
 
     expect($contract->approved)->toBeFalse();
     $contract->state->transitionTo(Approved::class, reference: $reference);
@@ -411,6 +444,9 @@ it('has states', function(Reference $reference, Customer $customer) {
     });
     expect($contract->state)->toBeInstanceOf(Approved::class);
     expect($contract->approved)->toBeTrue();
+    Notification::assertSentTo($contract->customer, function(QualifiedToApprovedBuyerNotification $notification) use ($reference) {
+        return $notification->getReferenceData()->code == $reference->code;
+    });
 
     expect($contract->validated)->toBeFalse();
     $contract->state->transitionTo(Validated::class, reference: $reference);
@@ -419,6 +455,9 @@ it('has states', function(Reference $reference, Customer $customer) {
     });
     expect($contract->state)->toBeInstanceOf(Validated::class);
     expect($contract->validated)->toBeTrue();
+    Notification::assertSentTo($contract->customer, function(ApprovedToValidatedBuyerNotification $notification) use ($reference) {
+        return $notification->getReferenceData()->code == $reference->code;
+    });
 
     expect($contract->cancelled)->toBeFalse();
     $contract->state->transitionTo(Cancelled::class, reference: $reference);
@@ -427,9 +466,14 @@ it('has states', function(Reference $reference, Customer $customer) {
     });
     expect($contract->state)->toBeInstanceOf(Cancelled::class);
     expect($contract->cancelled)->toBeTrue();
+    Notification::assertSentTo($contract->customer, function(ValidatedToCancelledBuyerNotification $notification) use ($reference) {
+        return $notification->getReferenceData()->code == $reference->code;
+    });
 
     /** payment failed then paid */
     $contract = new Contract;
+    $contract->customer = $customer;
+    $contract->save();
     $contract->state->transitionTo(Consulted::class);
     $contract->state->transitionTo(Availed::class);
     $contract->state->transitionTo(Verified::class);
@@ -441,6 +485,9 @@ it('has states', function(Reference $reference, Customer $customer) {
     });
     expect($contract->state)->toBeInstanceOf(PaymentFailed::class);
     expect($contract->payment_failed)->toBeTrue();
+    Notification::assertSentTo($contract->customer, function(OnboardedToPaymentFailedBuyerNotification $notification) use ($reference) {
+        return $notification->getReferenceData()->code == $reference->code;
+    });
 
     expect($contract->paid)->toBeFalse();
     $contract->state->transitionTo(Paid::class, reference: $reference);
@@ -449,9 +496,14 @@ it('has states', function(Reference $reference, Customer $customer) {
     });
     expect($contract->state)->toBeInstanceOf(Paid::class);
     expect($contract->paid)->toBeTrue();
+    Notification::assertSentTo($contract->customer, function(PaymentFailedToPaidBuyerNotification $notification) use ($reference) {
+        return $notification->getReferenceData()->code == $reference->code;
+    });
 
     /** idled then acknowledged */
     $contract = new Contract;
+    $contract->customer = $customer;
+    $contract->save();
     $contract->state->transitionTo(Consulted::class);
     $contract->state->transitionTo(Availed::class);
     $contract->state->transitionTo(Verified::class);
@@ -466,6 +518,9 @@ it('has states', function(Reference $reference, Customer $customer) {
     });
     expect($contract->state)->toBeInstanceOf(Idled::class);
     expect($contract->idled)->toBeTrue();
+    Notification::assertSentTo($contract->customer, function(AssignedToIdledBuyerNotification $notification) use ($reference) {
+        return $notification->getReferenceData()->code == $reference->code;
+    });
 
     expect($contract->acknowledged)->toBeFalse();
     $contract->state->transitionTo(Acknowledged::class, reference: $reference);
@@ -474,9 +529,14 @@ it('has states', function(Reference $reference, Customer $customer) {
     });
     expect($contract->state)->toBeInstanceOf(Acknowledged::class);
     expect($contract->acknowledged)->toBeTrue();
+    Notification::assertSentTo($contract->customer, function(IdledToAcknowledgedBuyerNotification $notification) use ($reference) {
+        return $notification->getReferenceData()->code == $reference->code;
+    });
 
     /** disapproved but overridden then validated */
     $contract = new Contract;
+    $contract->customer = $customer;
+    $contract->save();
     $contract->state->transitionTo(Consulted::class);
     $contract->state->transitionTo(Availed::class);
     $contract->state->transitionTo(Verified::class);
@@ -494,6 +554,9 @@ it('has states', function(Reference $reference, Customer $customer) {
     });
     expect($contract->state)->toBeInstanceOf(Disapproved::class);
     expect($contract->disapproved)->toBeTrue();
+    Notification::assertSentTo($contract->customer, function(QualifiedToDisapprovedBuyerNotification $notification) use ($reference) {
+        return $notification->getReferenceData()->code == $reference->code;
+    });
 
     expect($contract->overridden)->toBeFalse();
     $contract->state->transitionTo(Overridden::class, reference: $reference);
@@ -502,6 +565,9 @@ it('has states', function(Reference $reference, Customer $customer) {
     });
     expect($contract->state)->toBeInstanceOf(Overridden::class);
     expect($contract->overridden)->toBeTrue();
+    Notification::assertSentTo($contract->customer, function(DisapprovedToOverriddenBuyerNotification $notification) use ($reference) {
+        return $notification->getReferenceData()->code == $reference->code;
+    });
 
     expect($contract->validated)->toBeFalse();
     $contract->state->transitionTo(Validated::class, reference: $reference);
@@ -510,9 +576,14 @@ it('has states', function(Reference $reference, Customer $customer) {
     });
     expect($contract->state)->toBeInstanceOf(Validated::class);
     expect($contract->validated)->toBeTrue();
+    Notification::assertSentTo($contract->customer, function(OverriddenToValidatedBuyerNotification $notification) use ($reference) {
+        return $notification->getReferenceData()->code == $reference->code;
+    });
 
     /** failed */
     $contract = new Contract;
+    $contract->customer = $customer;
+    $contract->save();
     $contract->state->transitionTo(Consulted::class);
     $contract->state->transitionTo(Availed::class);
     $contract->state->transitionTo(Verified::class);
@@ -529,6 +600,10 @@ it('has states', function(Reference $reference, Customer $customer) {
     });
     expect($contract->state)->toBeInstanceOf(NotQualified::class);
     expect($contract->not_qualified)->toBeTrue();
+    Notification::assertSentTo($contract->customer, function(PrequalifiedToNotQualifiedBuyerNotification $notification) use ($reference) {
+        return $notification->getReferenceData()->code == $reference->code;
+    });
+
 })->with('reference', 'customer');
 
 it('has data', function(Customer $customer, Inventory $inventory, array $params) {
