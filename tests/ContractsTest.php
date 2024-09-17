@@ -336,7 +336,13 @@ dataset('reference', function () {
     ];
 });
 
-it('has states', function(Reference $reference, Customer $customer) {
+dataset('qr_code_url', function () {
+    return [
+        [fn() => 'https://pay.wepayez.com/qrcode/code?uuid=18c4185824a70bc58e8f569c0c671b251']
+    ];
+});
+
+it('has states', function(Reference $reference, Customer $customer, string $qr_code_url) {
     $contract = new Contract;
     $contract->customer = $customer;
     $contract->save();
@@ -372,9 +378,12 @@ it('has states', function(Reference $reference, Customer $customer) {
     expect($contract->verified)->toBeTrue();
 
     expect($contract->onboarded)->toBeFalse();
-    $contract->state->transitionTo(Onboarded::class, reference: $reference);
-    Event::assertDispatched(StateChanged::class, function (StateChanged $state) use ($reference) {
-        return $state->transition instanceof VerifiedToOnboarded && $state->transition->getReferenceCode() == $reference->code;
+    $contract->state->transitionTo(Onboarded::class, qr_code_url: $qr_code_url, reference: $reference);
+    Event::assertDispatched(StateChanged::class, function (StateChanged $state) use ($reference, $qr_code_url) {
+        return
+            $state->transition instanceof VerifiedToOnboarded &&
+            $state->transition->getReferenceCode() == $reference->code &&
+            $state->transition->getQRCodeUrl() == $qr_code_url;
     });
     expect($contract->state)->toBeInstanceOf(Onboarded::class);
     expect($contract->onboarded)->toBeTrue();
@@ -477,7 +486,7 @@ it('has states', function(Reference $reference, Customer $customer) {
     $contract->state->transitionTo(Consulted::class);
     $contract->state->transitionTo(Availed::class);
     $contract->state->transitionTo(Verified::class);
-    $contract->state->transitionTo(Onboarded::class);
+    $contract->state->transitionTo(Onboarded::class, qr_code_url: $qr_code_url);
     expect($contract->payment_failed)->toBeFalse();
     $contract->state->transitionTo(PaymentFailed::class, reference: $reference);
     Event::assertDispatched(StateChanged::class, function (StateChanged $state) use ($reference) {
@@ -507,7 +516,7 @@ it('has states', function(Reference $reference, Customer $customer) {
     $contract->state->transitionTo(Consulted::class);
     $contract->state->transitionTo(Availed::class);
     $contract->state->transitionTo(Verified::class);
-    $contract->state->transitionTo(Onboarded::class);
+    $contract->state->transitionTo(Onboarded::class, qr_code_url: $qr_code_url);
     $contract->state->transitionTo(Paid::class);
     $contract->state->transitionTo(Assigned::class);
 
@@ -540,7 +549,7 @@ it('has states', function(Reference $reference, Customer $customer) {
     $contract->state->transitionTo(Consulted::class);
     $contract->state->transitionTo(Availed::class);
     $contract->state->transitionTo(Verified::class);
-    $contract->state->transitionTo(Onboarded::class);
+    $contract->state->transitionTo(Onboarded::class, qr_code_url: $qr_code_url);
     $contract->state->transitionTo(Paid::class);
     $contract->state->transitionTo(Assigned::class);
     $contract->state->transitionTo(Acknowledged::class);
@@ -587,7 +596,7 @@ it('has states', function(Reference $reference, Customer $customer) {
     $contract->state->transitionTo(Consulted::class);
     $contract->state->transitionTo(Availed::class);
     $contract->state->transitionTo(Verified::class);
-    $contract->state->transitionTo(Onboarded::class);
+    $contract->state->transitionTo(Onboarded::class, qr_code_url: $qr_code_url);
     $contract->state->transitionTo(Paid::class);
     $contract->state->transitionTo(Assigned::class);
     $contract->state->transitionTo(Acknowledged::class);
@@ -604,7 +613,7 @@ it('has states', function(Reference $reference, Customer $customer) {
         return $notification->getReferenceData()->code == $reference->code;
     });
 
-})->with('reference', 'customer');
+})->with('reference', 'customer', 'qr_code_url');
 
 it('has data', function(Customer $customer, Inventory $inventory, array $params) {
     $contract = new Contract;
