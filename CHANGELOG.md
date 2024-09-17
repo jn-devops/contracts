@@ -2,6 +2,10 @@
 
 All notable changes to `contracts` will be documented in this file.
 
+## #v1.3.3 - 2024-09-17
+
+tested state transition notifications'
+
 ## #v1.3.1 - 2024-09-15
 
 contract id can be filled.
