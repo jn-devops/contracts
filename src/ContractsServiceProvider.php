@@ -17,7 +17,7 @@ class ContractsServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('contracts')
-            ->hasConfigFile(['borrower', 'contracts', 'data', 'mortgage', 'payment', 'vouchers'])
+            ->hasConfigFile(['borrower', 'contracts', 'data', 'mortgage', 'payment', 'property', 'vouchers'])
             ->hasViews()
             ->hasMigration('create_contracts_table')
             ->hasCommand(ContractsCommand::class);

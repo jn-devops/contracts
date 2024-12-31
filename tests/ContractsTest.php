@@ -77,6 +77,8 @@ beforeEach(function () {
     Notification::fake();
     $migration = include 'vendor/jn-devops/contacts/database/migrations/create_contacts_table.php.stub';
     $migration->up();
+    $migration = include 'vendor/jn-devops/contacts/database/migrations/update_fields_and_then_add_some_in_contacts_table.php.stub';
+    $migration->up();
     $migration = include 'vendor/jn-devops/products/database/migrations/create_products_table.php.stub';
     $migration->up();
     $migration = include 'vendor/jn-devops/properties/database/migrations/create_properties_table.php.stub';
@@ -188,6 +190,8 @@ it('can be filled', function(Customer $customer, Inventory $inventory, array $pa
 
 it('has a customer relation', function(Customer $customer) {
     with(Contract::factory()->for(factory: $customer, relationship: 'customer')->create(), function (Contract $contract) use ($customer) {
+        expect($contract->getAttribute('contact_id'))->toBe($customer->id);
+        expect($contract->customer->id)->toBeUuid();
         expect($contract->customer->is($customer))->toBeTrue();
         expect($contract->customer->getBirthDate()->eq('1999-03-17'))->toBeTrue();
         expect($contract->customer->getGrossMonthlyIncome()->inclusive()->compareTo(50000))->toBe(0);
@@ -205,6 +209,8 @@ it('can set customer', function(Customer $customer) {
 
 it('has an inventory relation', function (Inventory $inventory) {
     with(Contract::factory()->for(factory: $inventory, relationship: 'inventory')->create(), function (Contract $contract) use ($inventory) {
+        expect($contract->inventory->id)->toBe($inventory->id);
+        expect($contract->inventory->id)->toBeInt();
         expect($contract->inventory->is($inventory))->toBeTrue();
         expect($contract->inventory->product->getTotalContractPrice()->inclusive()->compareTo(2500000))->toBe(0);
 
@@ -241,6 +247,36 @@ it('can compute mortgage from input attributes', function(Customer $customer, In
         expect((float) $mortgage->getDownPaymentTerm())->toBe($contract->down_payment_term);//TODO: update $mortgage->getDownPaymentTerm(), return float
         expect((float) $mortgage->getBalancePaymentTerm())->toBe($contract->balance_payment_term);//TODO: update $mortgage->getBalancePaymentTerm(), return float
         expect($mortgage->getInterestRate())->toBe($contract->interest_rate);
+        expect(MortgageData::from($contract->mortgage)->toArray())->toBe(MortgageData::from($mortgage)->toArray());
+    });
+})->with('customer', 'inventory', 'params');
+
+it('can compute mortgage from relations only', function(Customer $customer, Inventory $inventory, array $params) {
+    $contract = new Contract;
+    $contract->customer = $customer;
+    $contract->inventory = $inventory;
+    $contract->save();
+    $contract->load('customer', 'inventory');
+
+    $borrower = (new Borrower)->setGrossMonthlyIncome($customer->getGrossMonthlyIncome())->setBirthdate($customer->getBirthdate());
+    $property = (new Property)->setTotalContractPrice($inventory->product->getTotalContractPrice())->setAppraisedValue($inventory->product->getAppraisedValue());
+
+    with(new Mortgage(property: $property, borrower: $borrower, params: []), function (Mortgage $mortgage) use ($borrower, $property, $contract) {
+        expect($property->getPercentDownPayment())->toBe(config('property.default.percent_dp'));
+        expect(config('property.default.percent_dp'))->toBe($percent_dp = 0.1);
+        expect($mortgage->getPercentDownPayment())->toBe($percent_dp);
+
+        expect($property->getDownPaymentTerm())->toBe(config('property.default.dp_term'));
+        expect(config('property.default.dp_term'))->toBe($dp_term = 6);
+        expect((float) $mortgage->getDownPaymentTerm())->toBe((float) $dp_term);
+
+        expect($property->getPercentMiscellaneousFees())->toBe(config('property.default.percent_mf'));
+        expect(config('property.default.percent_mf'))->toBe($percent_mf = 0.05);
+        expect($mortgage->getPercentMiscellaneousFees())->toBe($percent_mf);
+
+        expect((float) $mortgage->getBalancePaymentTerm())->toBe((float) $borrower->getMaximumTermAllowed());
+        expect($mortgage->getInterestRate())->toBe($property->getDefaultAnnualInterestRateFromBorrower($borrower));
+
         expect(MortgageData::from($contract->mortgage)->toArray())->toBe(MortgageData::from($mortgage)->toArray());
     });
 })->with('customer', 'inventory', 'params');
@@ -322,16 +358,16 @@ it('has dated status', function() {
 dataset('reference', function () {
     return [
         [fn() => app(CreateReferenceAction::class)->run([
-            InputFieldName::SKU => $this->faker->word(),
-            InputFieldName::WAGES => $this->faker->numberBetween(10000, 120000) * 1.00,
-            InputFieldName::TCP => $this->faker->numberBetween(850000, 4000000) * 1.00,
-            InputFieldName::PERCENT_DP => $this->faker->numberBetween(5, 10)/100,
-            InputFieldName::PERCENT_MF => $this->faker->numberBetween(8, 10)/100,
-            InputFieldName::DP_TERM => $this->faker->numberBetween(12, 24) * 1.00,
-            InputFieldName::BP_TERM => $this->faker->numberBetween(20, 30) * 1.00,
-            InputFieldName::BP_INTEREST_RATE => $this->faker->numberBetween(3, 7)/100,
-            InputFieldName::SELLER_COMMISSION_CODE => $this->faker->word(),
-            InputFieldName::PROMO_CODE => $this->faker->word(),
+            InputFieldName::SKU => fake()->word(),
+            InputFieldName::WAGES => fake()->numberBetween(10000, 120000) * 1.00,
+            InputFieldName::TCP => fake()->numberBetween(850000, 4000000) * 1.00,
+            InputFieldName::PERCENT_DP => fake()->numberBetween(5, 10)/100,
+            InputFieldName::PERCENT_MF => fake()->numberBetween(8, 10)/100,
+            InputFieldName::DP_TERM => fake()->numberBetween(12, 24) * 1.00,
+            InputFieldName::BP_TERM => fake()->numberBetween(20, 30) * 1.00,
+            InputFieldName::BP_INTEREST_RATE => fake()->numberBetween(3, 7)/100,
+            InputFieldName::SELLER_COMMISSION_CODE => fake()->word(),
+            InputFieldName::PROMO_CODE => fake()->word(),
         ], ['author' => 'Lester'])]
     ];
 });

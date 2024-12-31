@@ -35,9 +35,9 @@ trait HasInputAttributes
         return $this;
     }
 
-    public function getPercentDownPaymentAttribute(): float
+    public function getPercentDownPaymentAttribute(): ?float
     {
-        $default = -1.0;
+        $default = null;
 
         return $this->getAttribute('meta')->get(Contract::PERCENT_DP_FIELD) ?? $default;
     }
@@ -52,9 +52,9 @@ trait HasInputAttributes
         return $this;
     }
 
-    public function getPercentMiscellaneousFeesAttribute(): float
+    public function getPercentMiscellaneousFeesAttribute(): ?float
     {
-        $default = -1.0;
+        $default = null;
 
         return $this->getAttribute('meta')->get(Contract::PERCENT_MF_FIELD) ?? $default;
     }
@@ -69,9 +69,9 @@ trait HasInputAttributes
         return $this;
     }
 
-    public function getDownPaymentTermAttribute(): float
+    public function getDownPaymentTermAttribute(): ?float
     {
-        $default = -1.0;
+        $default = null;
 
         return $this->getAttribute('meta')->get(Contract::DP_TERM_FIELD) ?? $default;
     }
@@ -86,9 +86,9 @@ trait HasInputAttributes
         return $this;
     }
 
-    public function getBalancePaymentTermAttribute(): float
+    public function getBalancePaymentTermAttribute(): ?float
     {
-        $default = -1.0;
+        $default = null;
 
         return $this->getAttribute('meta')->get(Contract::BP_TERM_FIELD) ??  $default;;
     }
@@ -103,9 +103,9 @@ trait HasInputAttributes
         return $this;
     }
 
-    public function getInterestRateAttribute(): float
+    public function getInterestRateAttribute(): ?float
     {
-        $default = -1.0;
+        $default = null;
 
         return $this->getAttribute('meta')->get(Contract::BP_INTEREST_RATE_FIELD) ?? $default;
     }

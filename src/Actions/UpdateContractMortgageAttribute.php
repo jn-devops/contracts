@@ -30,21 +30,18 @@ class UpdateContractMortgageAttribute
      */
     public function handle(Contract $contract): bool
     {
-        $params = $this->getInputParams($contract);
-        $validator = Validator::make($params, $this->rules());
+        $validated = Validator::validate(
+            data: $this->getInputParams($contract),
+            rules: $this->rules()
+        );
+        if (($property = $this->getProperty($contract)) && ($borrower = $this->getBorrower($contract))) {
+            $contract->mortgage = new Mortgage(property: $property, borrower: $borrower, params: $validated);
+            ContractMortgageAttributeUpdated::dispatch($contract);
 
-        if ($validator->fails())
-            return false;
-        else {
-            if (($property = $this->getProperty($contract)) && ($borrower = $this->getBorrower($contract))) {
-                $contract->mortgage = new Mortgage(property: $property, borrower: $borrower, params: $params);
-                ContractMortgageAttributeUpdated::dispatch($contract);
-
-                return true;
-            }
-
-            return false;
+            return true;
         }
+
+        return false;
     }
 
     /**
@@ -53,11 +50,11 @@ class UpdateContractMortgageAttribute
     public function rules(): array
     {
         return [
-            Input::PERCENT_DP => ['required', 'numeric', 'min:0', 'max:0.50'],
-            Input::PERCENT_MF => ['required', 'numeric', 'min:0', 'max:0.15'],
-            Input::DP_TERM => ['required', 'integer', 'min:0', 'max:24'],
-            Input::BP_TERM => ['required', 'integer', 'min:0', 'max:30'],
-            Input::BP_INTEREST_RATE => ['required', 'numeric', 'min:0', 'max:0.20'],
+            Input::PERCENT_DP => ['nullable', 'numeric', 'min:0', 'max:0.50'],
+            Input::PERCENT_MF => ['nullable', 'numeric', 'min:0', 'max:0.15'],
+            Input::DP_TERM => ['nullable', 'integer', 'min:0', 'max:24'],
+            Input::BP_TERM => ['nullable', 'integer', 'min:0', 'max:30'],
+            Input::BP_INTEREST_RATE => ['nullable', 'numeric', 'min:0', 'max:0.20'],
         ];
     }
 
