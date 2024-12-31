@@ -2,6 +2,10 @@
 
 All notable changes to `contracts` will be documented in this file.
 
+## #v1.3.6 - 2024-12-31
+
+update UpdateContractMortgageAttribute to allow nullable params
+
 ## #v1.3.5 - 2024-11-17
 
 add borrower config file
