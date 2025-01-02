@@ -2,6 +2,10 @@
 
 All notable changes to `contracts` will be documented in this file.
 
+## #v1.4.0 - 2025-01-02
+
+use contract property and contact in updating mortgage
+
 ## #v1.3.9 - 2025-01-02
 
 add property to casts
