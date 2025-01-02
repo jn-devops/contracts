@@ -2,6 +2,10 @@
 
 All notable changes to `contracts` will be documented in this file.
 
+## #v1.3.7 - 2025-01-02
+
+add contact and property json fields
+
 ## #v1.3.6 - 2024-12-31
 
 update UpdateContractMortgageAttribute to allow nullable params
