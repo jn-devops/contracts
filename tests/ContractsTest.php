@@ -699,4 +699,18 @@ test('data from factory works', function () {
     expect(ContractData::fromModel($contract))->toBeInstanceOf(ContractData::class);
 });
 
+test('contract contact works', function () {
+    $array = [
+        'first_name' => 'Lester',
+        'last_name' => 'Hurtado',
+        'mobile' => '09171234567',
+        'email' => 'lester@hurtado.ph',
+        'date_of_birth' => '1970-04-21',
+    ];
+    $metadata = \Homeful\Contacts\Classes\ContactMetaData::from($array);
+    $contract = Contract::factory()->create();
+    $contract->update(['contact' => $metadata]);
+    $contract->save();
+    expect($contract->getAttribute('contact'))->toBeInstanceOf(\Homeful\Contacts\Classes\ContactMetaData::class);
+});
 

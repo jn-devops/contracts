@@ -18,11 +18,11 @@ use Homeful\Mortgage\Mortgage;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
-
 /**
  * Class Contract
  *
  * @property string $id
+ * @property ContactMetaData $contact
  * @property Customer $customer
  * @property Inventory $inventory
  * @property float $percent_down_payment
