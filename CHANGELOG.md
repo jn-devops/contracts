@@ -2,6 +2,10 @@
 
 All notable changes to `contracts` will be documented in this file.
 
+## #v1.3.9 - 2025-01-02
+
+add property to casts
+
 ## #v1.3.8 - 2025-01-02
 
 cast contact as ContactMetaData
