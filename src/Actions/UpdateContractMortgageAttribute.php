@@ -88,7 +88,11 @@ class UpdateContractMortgageAttribute
             ? (new Borrower)
                 ->setGrossMonthlyIncome($contract->customer->getGrossMonthlyIncome())
                 ->setBirthdate(optional($contract->customer)->getBirthdate())
-            : null;
+            : (isset($contract->contact)
+                ? (new Borrower)
+                    ->setGrossMonthlyIncome($contract->contact->employment->first()->monthly_gross_income)
+                    ->setBirthdate($contract->contact->date_of_birth)
+                : null);
     }
 
     /**
@@ -108,6 +112,10 @@ class UpdateContractMortgageAttribute
             ? (new Property)
                 ->setTotalContractPrice($contract->inventory->product->getTotalContractPrice())
                 ->setAppraisedValue($contract->inventory->product->getAppraisedValue())
-            : null;
+            : (isset($contract->property->product)
+                ? (new Property)
+                    ->setTotalContractPrice($contract->property->product->price)
+                    ->setAppraisedValue($contract->property->product->price)
+                : null);
     }
 }

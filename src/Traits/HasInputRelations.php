@@ -9,6 +9,7 @@ use Homeful\Contacts\Models\Contact as Customer;
 trait HasInputRelations
 {
     /**
+     * @deprecated
      * @return BelongsTo
      */
     public function customer(): BelongsTo
@@ -17,6 +18,7 @@ trait HasInputRelations
     }
 
     /**
+     * @deprecated
      * @param Customer $customer
      * @return HasInputRelations|\Homeful\Contracts\Models\Contract
      */
@@ -30,6 +32,7 @@ trait HasInputRelations
     }
 
     /**
+     * @deprecated
      * @return BelongsTo
      */
     public function inventory(): BelongsTo
@@ -38,6 +41,7 @@ trait HasInputRelations
     }
 
     /**
+     * @deprecated
      * @param Inventory $inventory
      * @return HasInputRelations|\Homeful\Contracts\Models\Contract
      */

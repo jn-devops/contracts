@@ -701,86 +701,105 @@ test('data from factory works', function () {
     expect(ContractData::fromModel($contract))->toBeInstanceOf(ContractData::class);
 });
 
-test('contract contact works', function () {
-    $array = [
-        'first_name' => 'Lester',
-        'last_name' => 'Hurtado',
-        'mobile' => '09171234567',
-        'email' => 'lester@hurtado.ph',
-        'date_of_birth' => '1970-04-21',
+
+dataset('contact attributes', function() {
+    return [
+        [fn() => [
+            'first_name' => 'Lester',
+            'last_name' => 'Hurtado',
+            'mobile' => '09171234567',
+            'email' => 'lester@hurtado.ph',
+            'date_of_birth' => '1970-04-21',
+        ]]
     ];
+});
+
+dataset('property attributes', function() {
+    return [
+        [fn() => [
+            "code" => "PVMP-01-002-001",
+            "name" => "Pagsibol Village Magalang Pampanga Duplex",
+            "type" => "House and Lot",
+            "cluster" => "1",
+            "phase" => "1",
+            "block" => "2",
+            "lot" => "1",
+            "building" => "",
+            "floor_area" => 45.5,
+            "lot_area" => 54,
+            "unit_type" => "Two Storey Duplex",
+            "unit_type_interior" => "Bare",
+            "house_color" => "",
+            "roof_style" => "",
+            "end_unit" => false,
+            "veranda" => false,
+            "balcony" => false,
+            "firewall" => false,
+            "eaves" => false,
+            "bedrooms" => 0,
+            "toilets_and_bathrooms" => 0,
+            "parking_slots" => 0,
+            "carports" => 0,
+            "project_code" => "PVMP",
+            "project_location" => "Magalang, Pampanga",
+            "project_address" => "Brgy. San Isidro, Magalang, Pampanga",
+            "sku" => "JN-PVMP-HLDU-54-h",
+            "tcp" => 1580000,
+            "product" => [
+                "sku" => "JN-PVMP-HLDU-54-h",
+                "name" => "Pagsibol Village Magalang Pampanga Duplex",
+                "brand" => "Pagsibol Village Magalang Pampanga",
+                "category" => "",
+                "description" => "Pagsibol is a ....",
+                "price" => 1580000,
+                "market_segment" => "",
+                "location" => "",
+                "destinations" => "",
+                "directions" => "",
+                "amenities" => "",
+                "facade_url" => "",
+                "project_location" => "",
+                "project_code" => "",
+                "property_name" => "",
+                "phase" => "",
+                "block" => "",
+                "lot" => "",
+                "lot_area" => 0,
+                "floor_area" => 0,
+                "project_address" => "",
+                "property_type" => "",
+                "unit_type" => "",
+                "appraised_value" => 1580000,
+                "percent_down_payment" => 0.1,
+                "down_payment_term" => 12,
+                "percent_miscellaneous_fees" => 0.085,
+            ],
+//        "project" => null,
+        ]]
+    ];
+});
+
+test('contract contact works', function (array $array) {
     $metadata = \Homeful\Contacts\Classes\ContactMetaData::from($array);
     $contract = Contract::factory()->create();
     $contract->update(['contact' => $metadata]);
     $contract->save();
     expect($contract->getAttribute('contact'))->toBeInstanceOf(\Homeful\Contacts\Classes\ContactMetaData::class);
-});
+})->with('contact attributes');
 
-test('contract property works', function () {
-    $array = [
-        "code" => "PVMP-01-002-001",
-        "name" => "Pagsibol Village Magalang Pampanga Duplex",
-        "type" => "House and Lot",
-        "cluster" => "1",
-        "phase" => "1",
-        "block" => "2",
-        "lot" => "1",
-        "building" => "",
-        "floor_area" => 45.5,
-        "lot_area" => 54,
-        "unit_type" => "Two Storey Duplex",
-        "unit_type_interior" => "Bare",
-        "house_color" => "",
-        "roof_style" => "",
-        "end_unit" => false,
-        "veranda" => false,
-        "balcony" => false,
-        "firewall" => false,
-        "eaves" => false,
-        "bedrooms" => 0,
-        "toilets_and_bathrooms" => 0,
-        "parking_slots" => 0,
-        "carports" => 0,
-        "project_code" => "PVMP",
-        "project_location" => "Magalang, Pampanga",
-        "project_address" => "Brgy. San Isidro, Magalang, Pampanga",
-        "sku" => "JN-PVMP-HLDU-54-h",
-        "tcp" => 1580000,
-        "product" => [
-            "sku" => "JN-PVMP-HLDU-54-h",
-            "name" => "Pagsibol Village Magalang Pampanga Duplex",
-            "brand" => "Pagsibol Village Magalang Pampanga",
-            "category" => "",
-            "description" => "Pagsibol is a ....",
-            "price" => 1580000,
-            "market_segment" => "",
-            "location" => "",
-            "destinations" => "",
-            "directions" => "",
-            "amenities" => "",
-            "facade_url" => "",
-            "project_location" => "",
-            "project_code" => "",
-            "property_name" => "",
-            "phase" => "",
-            "block" => "",
-            "lot" => "",
-            "lot_area" => 0,
-            "floor_area" => 0,
-            "project_address" => "",
-            "property_type" => "",
-            "unit_type" => "",
-            "appraised_value" => 1580000,
-            "percent_down_payment" => 0.1,
-            "down_payment_term" => 12,
-            "percent_miscellaneous_fees" => 0.085,
-        ],
-//        "project" => null,
-    ];
+test('contract property works', function (array $array) {
     $metadata = PropertyData::from($array);
     $contract = Contract::factory()->create();
     $contract->update(['property' => $metadata]);
     $contract->save();
     expect($contract->getAttribute('property'))->toBeInstanceOf(PropertyData::class);
-});
+})->with('property attributes');
+
+test('contract mortgage from contact and property', function (array $contact_attributes, array $property_attributes) {
+    $contract = Contract::factory()->create();
+    $contract->update(['contact' => $contact_attributes]);
+    $contract->update(['property' => $property_attributes]);
+    $contract->save();
+    expect($contract->getAttribute('mortgage'))->toBeInstanceOf(Mortgage::class);
+})->with('contact attributes', 'property attributes');
 
