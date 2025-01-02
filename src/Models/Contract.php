@@ -9,6 +9,7 @@ use Homeful\Properties\Models\Property as Inventory;
 use Homeful\Contacts\Models\Contact as Customer;
 use Homeful\Contracts\Traits\HasInputAttributes;
 use Homeful\Contracts\Traits\HasInputRelations;
+use Homeful\Contacts\Classes\ContactMetaData;
 use Homeful\Contracts\States\ContractState;
 use Illuminate\Database\Eloquent\Model;
 use Homeful\Common\Traits\HasMeta;
@@ -16,6 +17,7 @@ use Spatie\ModelStates\HasStates;
 use Homeful\Mortgage\Mortgage;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
+
 
 /**
  * Class Contract
@@ -82,6 +84,8 @@ class Contract extends Model
     public $incrementing = false;
 
     protected $fillable = [
+        'contact',
+        'property',
         'customer',
         'inventory',
         'reference_code',
@@ -89,7 +93,8 @@ class Contract extends Model
     ];
 
     protected $casts = [
-        'state' => ContractState::class
+        'state' => ContractState::class,
+        'contact' => ContactMetaData::class
     ];
 
     public static function booted(): void
