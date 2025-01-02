@@ -11,6 +11,7 @@ use Homeful\Contracts\Traits\HasInputAttributes;
 use Homeful\Contracts\Traits\HasInputRelations;
 use Homeful\Contacts\Classes\ContactMetaData;
 use Homeful\Contracts\States\ContractState;
+use Homeful\Properties\Data\PropertyData;
 use Illuminate\Database\Eloquent\Model;
 use Homeful\Common\Traits\HasMeta;
 use Spatie\ModelStates\HasStates;
@@ -23,6 +24,7 @@ use Illuminate\Support\Str;
  *
  * @property string $id
  * @property ContactMetaData $contact
+ * @property PropertyData $property
  * @property Customer $customer
  * @property Inventory $inventory
  * @property float $percent_down_payment
@@ -94,7 +96,8 @@ class Contract extends Model
 
     protected $casts = [
         'state' => ContractState::class,
-        'contact' => ContactMetaData::class
+        'contact' => ContactMetaData::class,
+        'property' => PropertyData::class
     ];
 
     public static function booted(): void
