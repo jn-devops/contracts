@@ -116,6 +116,7 @@ class UpdateContractMortgageAttribute
                 ? (new Property)
                     ->setTotalContractPrice($contract->property->product->price)
                     ->setAppraisedValue($contract->property->product->price)
+                    ->setSKU($contract->property->product->sku)
                 : null);
     }
 }

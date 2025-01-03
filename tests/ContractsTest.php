@@ -801,5 +801,7 @@ test('contract mortgage from contact and property', function (array $contact_att
     $contract->update(['property' => $property_attributes]);
     $contract->save();
     expect($contract->getAttribute('mortgage'))->toBeInstanceOf(Mortgage::class);
+    //TODO: assert $contract_attributes are in mortgage->getBorrower() attributes
+    //TODO: assert $property_attributes are in mortgage->getProperty() attributes e.g., sku
 })->with('contact attributes', 'property attributes');
 
