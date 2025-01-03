@@ -11,7 +11,9 @@ use Homeful\Contracts\Traits\HasInputAttributes;
 use Homeful\Contracts\Traits\HasInputRelations;
 use Homeful\Contacts\Classes\ContactMetaData;
 use Homeful\Contracts\States\ContractState;
+use Illuminate\Notifications\Notification;
 use Homeful\Properties\Data\PropertyData;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 use Homeful\Common\Traits\HasMeta;
 use Spatie\ModelStates\HasStates;
@@ -78,8 +80,9 @@ class Contract extends Model
 {
     use HasInputAttributes, HasInputRelations, HasDatedStatusAttributes;
     use HasFactory;
-    use HasMeta;
+    use Notifiable;
     use HasStates;
+    use HasMeta;
 
     protected $keyType = 'string';
 
@@ -105,6 +108,16 @@ class Contract extends Model
         static::creating(function (Contract $contract) {
             $contract->id = $contract->id ?: Str::uuid()->toString();
         });
+    }
+
+    public function routeNotificationForMail(Notification $notification)
+    {
+        return optional($this->contact)->email;
+    }
+
+    public function routeNotificationForEngageSpark(Notification $notification): string
+    {
+        return optional($this->contact)->mobile;
     }
 
     /**

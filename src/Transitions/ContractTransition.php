@@ -65,7 +65,7 @@ abstract class ContractTransition extends Transition
             $transition_class = get_class($this);
             $notification_classes = Arr::get($config, $transition_class, []);
             foreach ($notification_classes as $notification_class) {
-                $this->contract->customer->notify(new $notification_class($data));
+                $this->contract->notify(new $notification_class($data));
             }
         }
     }
