@@ -2,6 +2,7 @@
 
 namespace Homeful\Contracts\Data;
 
+use Homeful\Contacts\Classes\ContactMetaData;
 use Homeful\Properties\Data\PropertyData;
 use Homeful\Mortgage\Data\MortgageData;
 use Homeful\Contracts\Models\Contract;
@@ -13,8 +14,10 @@ class ContractData extends Data
 {
     public function __construct(
         public ?string $reference_code,
-        public ContactData $customer,
-        public PropertyData $inventory,
+        public ?ContactMetaData $contact,
+        public ?PropertyData $property,
+        public ?ContactData $customer,
+        public ?PropertyData $inventory,
         public MortgageData $mortgage,
         public string $state,
         public ?Carbon $consulted_at,
@@ -40,9 +43,11 @@ class ContractData extends Data
     public static function fromModel(Contract $contract): ContractData
     {
         return new self(
-            reference_code: $contract->reference_code,
-            customer: ContactData::fromModel($contract->customer),
-            inventory: PropertyData::fromModel($contract->inventory),
+            reference_code: $contract->getAttribute('reference_code'),
+            contact: $contract->contact,
+            property: $contract->property,
+            customer: null == $contract->customer ? null : ContactData::fromModel($contract->customer),
+            inventory: null == $contract->inventory ? null : PropertyData::fromModel($contract->inventory),
             mortgage: MortgageData::fromObject($contract->mortgage),
             state: $contract->state->name(), //$contract->state->getValue(),
             consulted_at: $contract->consulted_at,
