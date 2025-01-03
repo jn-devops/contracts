@@ -2,6 +2,10 @@
 
 All notable changes to `contracts` will be documented in this file.
 
+## #v1.4.2 - 2025-01-03
+
+make contract notifiable
+
 ## #v1.4.1 - 2025-01-03
 
 add sku in contact mortgage property
