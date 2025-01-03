@@ -2,6 +2,10 @@
 
 All notable changes to `contracts` will be documented in this file.
 
+## #v1.4.3 - 2025-01-03
+
+add contact and property to ContractData
+
 ## #v1.4.2 - 2025-01-03
 
 make contract notifiable
