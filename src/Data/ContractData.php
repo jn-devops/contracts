@@ -48,7 +48,7 @@ class ContractData extends Data
             property: $contract->property,
             customer: null == $contract->customer ? null : ContactData::fromModel($contract->customer),
             inventory: null == $contract->inventory ? null : PropertyData::fromModel($contract->inventory),
-            mortgage: MortgageData::fromObject($contract->mortgage),
+            mortgage: null == $contract->mortgage ? null : MortgageData::fromObject($contract->mortgage),
             state: $contract->state->name(), //$contract->state->getValue(),
             consulted_at: $contract->consulted_at,
             availed_at: $contract->availed_at,
