@@ -2,6 +2,10 @@
 
 All notable changes to `contracts` will be documented in this file.
 
+## #v1.4.4 - 2025-01-03
+
+fix nullable mortgage in ContractData
+
 ## #v1.4.3 - 2025-01-03
 
 add contact and property to ContractData
