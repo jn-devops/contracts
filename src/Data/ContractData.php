@@ -18,7 +18,7 @@ class ContractData extends Data
         public ?PropertyData $property,
         public ?ContactData $customer,
         public ?PropertyData $inventory,
-        public MortgageData $mortgage,
+        public ?MortgageData $mortgage,
         public string $state,
         public ?Carbon $consulted_at,
         public ?Carbon $availed_at,
