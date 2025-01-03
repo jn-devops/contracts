@@ -2,6 +2,10 @@
 
 All notable changes to `contracts` will be documented in this file.
 
+## #v1.4.6 - 2025-01-03
+
+format dates in contract'
+
 ## #v1.4.5 - 2025-01-03
 
 fix nullable mortgage in ContractData 2
