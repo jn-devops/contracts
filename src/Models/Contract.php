@@ -100,7 +100,24 @@ class Contract extends Model
     protected $casts = [
         'state' => ContractState::class,
         'contact' => ContactMetaData::class,
-        'property' => PropertyData::class
+        'property' => PropertyData::class,
+        'consulted_at' => 'datetime:Y-m-d',
+        'availed_at' => 'datetime:Y-m-d',
+        'verified_at' => 'datetime:Y-m-d',
+        'onboarded_at' => 'datetime:Y-m-d',
+        'paid_at' => 'datetime:Y-m-d',
+        'payment_failed_at' => 'datetime:Y-m-d',
+        'assigned_at' => 'datetime:Y-m-d',
+        'idled_at' => 'datetime:Y-m-d',
+        'acknowledged_at' => 'datetime:Y-m-d',
+        'prequalified_at' => 'datetime:Y-m-d',
+        'qualified_at' => 'datetime:Y-m-d',
+        'not_qualified_at' => 'datetime:Y-m-d',
+        'approved_at' => 'datetime:Y-m-d',
+        'validated_at' => 'datetime:Y-m-d',
+        'disapproved_at' => 'datetime:Y-m-d',
+        'overridden_at' => 'datetime:Y-m-d',
+        'cancelled_at' => 'datetime:Y-m-d',
     ];
 
     public static function booted(): void

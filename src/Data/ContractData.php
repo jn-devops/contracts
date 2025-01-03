@@ -8,7 +8,11 @@ use Homeful\Mortgage\Data\MortgageData;
 use Homeful\Contracts\Models\Contract;
 use Homeful\Contacts\Data\ContactData;
 use Illuminate\Support\Carbon;
+use Spatie\LaravelData\Attributes\WithCast;
+use Spatie\LaravelData\Attributes\WithTransformer;
+use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Transformers\DateTimeInterfaceTransformer;
 
 class ContractData extends Data
 {
@@ -20,7 +24,7 @@ class ContractData extends Data
         public ?PropertyData $inventory,
         public ?MortgageData $mortgage,
         public string $state,
-        public ?Carbon $consulted_at,
+        public Carbon|null $consulted_at,
         public ?Carbon $availed_at,
         public ?Carbon $verified_at,
         public ?Carbon $onboarded_at,

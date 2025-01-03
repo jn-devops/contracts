@@ -38,6 +38,7 @@ use Illuminate\Support\Facades\Notification;
 use Illuminate\Foundation\Testing\WithFaker;
 use Spatie\ModelStates\Events\StateChanged;
 use Homeful\Contracts\States\PaymentFailed;
+use Homeful\References\Facades\References;
 use Homeful\Contracts\States\Prequalified;
 use Homeful\Contracts\States\NotQualified;
 use Homeful\Contracts\States\Acknowledged;
@@ -805,3 +806,13 @@ test('contract mortgage from contact and property', function (array $contact_att
     //TODO: assert $property_attributes are in mortgage->getProperty() attributes e.g., sku
 })->with('contact attributes', 'property attributes');
 
+test('contract data works without mortage', function (){
+    $contract = Contract::create();
+    $entities = [
+        'contract' => $contract
+    ];
+    $reference = References::withEntities(...$entities)->withStartTime(now())->create();
+    $contract->state->transitionTo(Consulted::class, $reference);
+    expect($contract->consulted_at)->toBeInstanceOf(Carbon::class);
+    expect($contract->consulted)->toBeTrue();
+});
