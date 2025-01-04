@@ -2,6 +2,10 @@
 
 All notable changes to `contracts` will be documented in this file.
 
+## #v1.4.9 - 2025-01-04
+
+make contract checkin nullable
+
 ## #v1.4.8 - 2025-01-04
 
 change lead to checkin
