@@ -2,6 +2,10 @@
 
 All notable changes to `contracts` will be documented in this file.
 
+## #v1.4.7 - 2025-01-04
+
+add lead and payment json field attributes
+
 ## #v1.4.6 - 2025-01-03
 
 format dates in contract'
