@@ -12,8 +12,10 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->json('contact')->nullable();
             $table->json('property')->nullable();
-            $table->string('contact_id')->nullable()->index();
-            $table->string('property_code')->nullable()->index();
+            $table->json('lead')->nullable();
+            $table->json('payment')->nullable();
+            $table->string('contact_id')->nullable()->index(); //deprecated
+            $table->string('property_code')->nullable()->index(); //deprecated
             $table->string('seller_commission_code')->nullable()->index();
             $table->schemalessAttributes('meta');
             $table->string('state')->nullable();

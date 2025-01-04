@@ -17,6 +17,7 @@
     ],
     "require": {
         "php": "^8.2",
+        "homeful/kwyc-check": "^1.5",
         "homeful/notifications": "^v1.2",
         "homeful/references": "^1.1",
         "illuminate/contracts": "^10.0||^11.0",

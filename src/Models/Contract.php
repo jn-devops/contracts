@@ -15,6 +15,7 @@ use Illuminate\Notifications\Notification;
 use Homeful\Properties\Data\PropertyData;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
+use Homeful\KwYCCheck\Data\LeadData;
 use Homeful\Common\Traits\HasMeta;
 use Spatie\ModelStates\HasStates;
 use Homeful\Mortgage\Mortgage;
@@ -27,6 +28,7 @@ use Illuminate\Support\Str;
  * @property string $id
  * @property ContactMetaData $contact
  * @property PropertyData $property
+ * @property LeadData $lead
  * @property Customer $customer
  * @property Inventory $inventory
  * @property float $percent_down_payment
@@ -91,6 +93,7 @@ class Contract extends Model
     protected $fillable = [
         'contact',
         'property',
+        'lead',
         'customer',
         'inventory',
         'reference_code',
@@ -101,6 +104,7 @@ class Contract extends Model
         'state' => ContractState::class,
         'contact' => ContactMetaData::class,
         'property' => PropertyData::class,
+        'lead' => LeadData::class,
         'consulted_at' => 'datetime:Y-m-d',
         'availed_at' => 'datetime:Y-m-d',
         'verified_at' => 'datetime:Y-m-d',
