@@ -27,11 +27,11 @@ use Illuminate\Support\Str;
  * Class Contract
  *
  * @property string $id
- * @property ContactMetaData $contact
- * @property PropertyData $property
- * @property CheckinData $checkin
- * @property Customer $customer
- * @property Inventory $inventory
+ * @property ContactMetaData|null $contact
+ * @property PropertyData|null $property
+ * @property CheckinData|null $checkin
+ * @property Customer|null $customer
+ * @property Inventory|null $inventory
  * @property float $percent_down_payment
  * @property float $percent_miscellaneous_fees
  * @property float $down_payment_term
@@ -105,7 +105,6 @@ class Contract extends Model
         'state' => ContractState::class,
         'contact' => ContactMetaData::class,
         'property' => PropertyData::class,
-//        'checkin' => CheckinData::class,
         'consulted_at' => 'datetime:Y-m-d',
         'availed_at' => 'datetime:Y-m-d',
         'verified_at' => 'datetime:Y-m-d',
@@ -166,7 +165,7 @@ class Contract extends Model
     protected function Checkin(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => CheckinData::fromObject($value)
+            get: fn ($value) => null == $value ? null :  CheckinData::fromObject($value)
         );
     }
 }

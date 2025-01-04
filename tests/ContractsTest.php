@@ -839,6 +839,7 @@ dataset('checkin_payload', function () {
 
 test('contact has checkin', function (array $checkin_payload) {
     $contract = Contract::create();
+    expect($contract->checkin)->toBeNull();
     $contract->update(['checkin' => $checkin_payload]);
     $contract->save();
     expect($contract->checkin)->toBeInstanceOf(CheckinData::class);
