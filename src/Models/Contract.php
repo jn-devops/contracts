@@ -6,6 +6,7 @@ use Homeful\Common\Traits\HasPackageFactory as HasFactory;
 use Homeful\Contracts\Traits\HasDatedStatusAttributes;
 use Spatie\SchemalessAttributes\SchemalessAttributes;
 use Homeful\Properties\Models\Property as Inventory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Homeful\Contacts\Models\Contact as Customer;
 use Homeful\Contracts\Traits\HasInputAttributes;
 use Homeful\Contracts\Traits\HasInputRelations;
@@ -15,7 +16,7 @@ use Illuminate\Notifications\Notification;
 use Homeful\Properties\Data\PropertyData;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
-use Homeful\KwYCCheck\Data\LeadData;
+use Homeful\KwYCCheck\Data\CheckinData;
 use Homeful\Common\Traits\HasMeta;
 use Spatie\ModelStates\HasStates;
 use Homeful\Mortgage\Mortgage;
@@ -28,7 +29,7 @@ use Illuminate\Support\Str;
  * @property string $id
  * @property ContactMetaData $contact
  * @property PropertyData $property
- * @property LeadData $lead
+ * @property CheckinData $checkin
  * @property Customer $customer
  * @property Inventory $inventory
  * @property float $percent_down_payment
@@ -93,7 +94,7 @@ class Contract extends Model
     protected $fillable = [
         'contact',
         'property',
-        'lead',
+        'checkin',
         'customer',
         'inventory',
         'reference_code',
@@ -104,7 +105,7 @@ class Contract extends Model
         'state' => ContractState::class,
         'contact' => ContactMetaData::class,
         'property' => PropertyData::class,
-        'lead' => LeadData::class,
+//        'checkin' => CheckinData::class,
         'consulted_at' => 'datetime:Y-m-d',
         'availed_at' => 'datetime:Y-m-d',
         'verified_at' => 'datetime:Y-m-d',
@@ -160,5 +161,12 @@ class Contract extends Model
         $serialized = $this->getAttribute('meta')->get('mortgage');
 
         return $serialized ? unserialize($serialized) : null;
+    }
+
+    protected function Checkin(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => CheckinData::fromObject($value)
+        );
     }
 }

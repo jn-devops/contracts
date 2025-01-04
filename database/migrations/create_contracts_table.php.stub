@@ -12,7 +12,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->json('contact')->nullable();
             $table->json('property')->nullable();
-            $table->json('lead')->nullable();
+            $table->json('checkin')->nullable();
             $table->json('payment')->nullable();
             $table->string('contact_id')->nullable()->index(); //deprecated
             $table->string('property_code')->nullable()->index(); //deprecated

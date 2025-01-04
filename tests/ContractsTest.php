@@ -71,6 +71,8 @@ use Homeful\Mortgage\Mortgage;
 use Illuminate\Support\Carbon;
 
 use Homeful\Contracts\States\{Pending, Consulted};
+use Homeful\KwYCCheck\Data\CheckinData;
+use Homeful\KwYCCheck\Models\Lead;
 
 uses(RefreshDatabase::class, WithFaker::class);
 
@@ -806,7 +808,7 @@ test('contract mortgage from contact and property', function (array $contact_att
     //TODO: assert $property_attributes are in mortgage->getProperty() attributes e.g., sku
 })->with('contact attributes', 'property attributes');
 
-test('contract data works without mortage', function (){
+test('contract data works without mortgage', function (){
     $contract = Contract::create();
     $entities = [
         'contract' => $contract
@@ -816,3 +818,28 @@ test('contract data works without mortage', function (){
     expect($contract->consulted_at)->toBeInstanceOf(Carbon::class);
     expect($contract->consulted)->toBeTrue();
 });
+
+dataset('checkin_payload', function () {
+    return [
+        [fn() => Lead::factory()->getCheckinPayload([
+            'email' => fake()->email(),
+            'mobile' => '09171234567',
+            'code' => fake()->word(),
+            'identifier' => fake()->word(),
+            'choice' => fake()->word(),
+            'location' => fake()->latitude() .',' . fake()->longitude(),
+            'fullName' => fake()->name(),
+            'address' => fake()->city(),
+            'dateOfBirth' => '1999-03-17',
+            'idType' => 'phl_dl',
+            'idNumber' => 'ID-123456'
+        ])]
+    ];
+});
+
+test('contact has checkin', function (array $checkin_payload) {
+    $contract = Contract::create();
+    $contract->update(['checkin' => $checkin_payload]);
+    $contract->save();
+    expect($contract->checkin)->toBeInstanceOf(CheckinData::class);
+})->with('checkin_payload');
