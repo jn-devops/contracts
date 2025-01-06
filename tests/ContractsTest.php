@@ -844,3 +844,12 @@ test('contact has checkin', function (array $checkin_payload) {
     $contract->save();
     expect($contract->checkin)->toBeInstanceOf(CheckinData::class);
 })->with('checkin_payload');
+
+test('contact checkin can accept json (string)', function (array $checkin_payload) {
+    $contract = Contract::create();
+    expect($contract->checkin)->toBeNull();
+    $json = json_encode($checkin_payload);
+    $contract->update(['checkin' => $json]);
+    $contract->save();
+    expect($contract->checkin)->toBeInstanceOf(CheckinData::class);
+})->with('checkin_payload');

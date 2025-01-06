@@ -165,7 +165,7 @@ class Contract extends Model
     protected function Checkin(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => null == $value ? null :  CheckinData::fromObject($value)
+            get: fn ($value) => null == $value ? null :  CheckinData::fromObject(is_array($value) ? $value : json_decode($value, true))
         );
     }
 }
