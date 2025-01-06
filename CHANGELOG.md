@@ -2,6 +2,10 @@
 
 All notable changes to `contracts` will be documented in this file.
 
+## #v1.5.0 - 2025-01-06
+
+contract checkin can accept json string
+
 ## #v1.4.9 - 2025-01-04
 
 make contract checkin nullable
