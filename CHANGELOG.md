@@ -2,6 +2,10 @@
 
 All notable changes to `contracts` will be documented in this file.
 
+## #v1.5.1 - 2025-01-08
+
+update contract payment, change it to array
+
 ## #v1.5.0 - 2025-01-06
 
 contract checkin can accept json string
