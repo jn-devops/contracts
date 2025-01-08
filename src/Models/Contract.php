@@ -30,6 +30,7 @@ use Illuminate\Support\Str;
  * @property ContactMetaData|null $contact
  * @property PropertyData|null $property
  * @property CheckinData|null $checkin
+ * @property array $payment
  * @property Customer|null $customer
  * @property Inventory|null $inventory
  * @property float $percent_down_payment
@@ -95,6 +96,7 @@ class Contract extends Model
         'contact',
         'property',
         'checkin',
+        'payment',
         'customer',
         'inventory',
         'reference_code',
@@ -105,6 +107,7 @@ class Contract extends Model
         'state' => ContractState::class,
         'contact' => ContactMetaData::class,
         'property' => PropertyData::class,
+        'payment' => 'array',
         'consulted_at' => 'datetime:Y-m-d',
         'availed_at' => 'datetime:Y-m-d',
         'verified_at' => 'datetime:Y-m-d',

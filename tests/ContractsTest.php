@@ -853,3 +853,17 @@ test('contact checkin can accept json (string)', function (array $checkin_payloa
     $contract->save();
     expect($contract->checkin)->toBeInstanceOf(CheckinData::class);
 })->with('checkin_payload');
+
+dataset('payment_payload', function () {
+    return [
+        [fn() => json_decode('{"code":"00","data":{"orderInformation":{"amount":5000,"attach":"attach","currency":"PHP","goodsDetail":"Processing Fee","orderAmount":0,"orderId":"JN123456722","paymentBrand":"MasterCard","paymentType":"PAYMENT","qrTag":1,"referencedId":"202410302883035985507708928","responseDate":"2024-10-30T15:23:29+08:00","surcharge":0,"tipFee":0,"transactionResult":"SUCCESS"}},"message":"Success"}',true)]
+    ];
+});
+
+test('contact payment can accept array', function (array $payment_payload) {
+    $contract = Contract::create();
+    expect($contract->payment)->toBeNull();
+    $contract->update(['payment' => $payment_payload]);
+    $contract->save();
+    expect($contract->payment)->toBeArray();
+})->with('payment_payload');
