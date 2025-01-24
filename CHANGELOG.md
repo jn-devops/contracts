@@ -2,6 +2,10 @@
 
 All notable changes to `contracts` will be documented in this file.
 
+## #v1.5.2 - 2025-01-24
+
+add configurable relations
+
 ## #v1.5.1 - 2025-01-08
 
 update contract payment, change it to array
