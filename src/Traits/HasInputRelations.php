@@ -9,16 +9,21 @@ use Homeful\Contacts\Models\Contact as Customer;
 trait HasInputRelations
 {
     /**
-     * @deprecated
+     *
      * @return BelongsTo
      */
     public function customer(): BelongsTo
     {
-        return $this->belongsTo(Customer::class, 'contact_id', 'id', 'contacts');
+        return $this->belongsTo(
+            related: config(key: 'contracts.models.customer', default: Customer::class),
+            foreignKey: 'contact_id',
+            ownerKey: 'id',
+            relation: 'contacts'
+        );
     }
 
     /**
-     * @deprecated
+     *
      * @param Customer $customer
      * @return HasInputRelations|\Homeful\Contracts\Models\Contract
      */
@@ -32,16 +37,21 @@ trait HasInputRelations
     }
 
     /**
-     * @deprecated
+     *
      * @return BelongsTo
      */
     public function inventory(): BelongsTo
     {
-        return $this->belongsTo(Inventory::class, 'property_code', 'code', 'properties');
+        return $this->belongsTo(
+            related: config(key: 'contracts.models.inventory', default: Inventory::class),
+            foreignKey: 'property_code',
+            ownerKey: 'code',
+            relation: 'properties'
+        );
     }
 
     /**
-     * @deprecated
+     *
      * @param Inventory $inventory
      * @return HasInputRelations|\Homeful\Contracts\Models\Contract
      */

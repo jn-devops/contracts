@@ -44,7 +44,14 @@ use Homeful\Contracts\Transitions\{
     OverriddenToCancelled
 };
 
+use Homeful\Properties\Models\Property as Inventory;
+use Homeful\Contacts\Models\Contact as Customer;
+
 return [
+    'models' => [
+        'inventory' => Inventory::class,
+        'customer' => Customer::class
+    ],
     'notifications' => [
         VerifiedToOnboarded::class => [
             VerifiedToOnboardedBuyerNotification::class
