@@ -4,7 +4,7 @@ namespace Homeful\Contracts\Traits;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Homeful\Properties\Models\Property as Inventory;
-use Homeful\Contacts\Models\Contact as Customer;
+use Homeful\Contacts\Models\Customer as Contact;
 
 trait HasInputRelations
 {
@@ -15,7 +15,7 @@ trait HasInputRelations
     public function customer(): BelongsTo
     {
         return $this->belongsTo(
-            related: config(key: 'contracts.models.customer', default: Customer::class),
+            related: config(key: 'contracts.models.customer', default: Contact::class),
             foreignKey: 'contact_id',
             ownerKey: 'id',
             relation: 'contacts'
@@ -24,10 +24,10 @@ trait HasInputRelations
 
     /**
      *
-     * @param Customer $customer
+     * @param Contact $customer
      * @return HasInputRelations|\Homeful\Contracts\Models\Contract
      */
-    public function setCustomerAttribute(Customer $customer): self
+    public function setCustomerAttribute(Contact $customer): self
     {
         //TODO: create validation of customer
         $this->customer()->associate($customer);

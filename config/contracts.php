@@ -45,12 +45,12 @@ use Homeful\Contracts\Transitions\{
 };
 
 use Homeful\Properties\Models\Property as Inventory;
-use Homeful\Contacts\Models\Contact as Customer;
+use Homeful\Contacts\Models\Customer as Contract;
 
 return [
     'models' => [
         'inventory' => Inventory::class,
-        'customer' => Customer::class
+        'customer' => Contract::class
     ],
     'notifications' => [
         VerifiedToOnboarded::class => [

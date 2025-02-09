@@ -96,6 +96,8 @@ class UpdateContractMortgageAttribute
     }
 
     /**
+     * TODO: update appraised value
+     *
      * @param Contract $contract
      * @return Property|null
      * @throws \Brick\Math\Exception\MathException

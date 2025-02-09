@@ -3,9 +3,11 @@
 namespace Homeful\Contracts\Models;
 
 use Homeful\Common\Traits\HasPackageFactory as HasFactory;
+
 use Homeful\Contracts\Traits\HasDatedStatusAttributes;
 use Spatie\SchemalessAttributes\SchemalessAttributes;
 use Homeful\Properties\Models\Property as Inventory;
+use Spatie\LaravelData\{DataCollection, WithData};
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Homeful\Contacts\Models\Contact as Customer;
 use Homeful\Contracts\Traits\HasInputAttributes;
@@ -15,6 +17,7 @@ use Homeful\Contracts\States\ContractState;
 use Illuminate\Notifications\Notification;
 use Homeful\Properties\Data\PropertyData;
 use Illuminate\Notifications\Notifiable;
+use Homeful\Contracts\Data\ContractData;
 use Illuminate\Database\Eloquent\Model;
 use Homeful\KwYCCheck\Data\CheckinData;
 use Homeful\Common\Traits\HasMeta;
@@ -79,6 +82,7 @@ use Illuminate\Support\Str;
  *
  * @method Model create()
  * @method int getKey()
+ * @method ContractData getData()
  */
 class Contract extends Model
 {
@@ -86,6 +90,7 @@ class Contract extends Model
     use HasFactory;
     use Notifiable;
     use HasStates;
+    use WithData;
     use HasMeta;
 
     protected $keyType = 'string';
@@ -99,7 +104,7 @@ class Contract extends Model
         'payment',
         'customer',
         'inventory',
-        'reference_code',
+//        'reference_code',
         'seller_commission_code',
     ];
 
@@ -126,6 +131,8 @@ class Contract extends Model
         'overridden_at' => 'datetime:Y-m-d',
         'cancelled_at' => 'datetime:Y-m-d',
     ];
+
+    protected string $dataClass = ContractData::class;
 
     public static function booted(): void
     {
