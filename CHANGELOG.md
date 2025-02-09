@@ -2,6 +2,10 @@
 
 All notable changes to `contracts` will be documented in this file.
 
+## #v1.6.0 - 2025-02-09
+
+update Contact, use Customer as Contact
+
 ## #v1.5.2 - 2025-01-24
 
 add configurable relations
