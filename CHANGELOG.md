@@ -2,6 +2,10 @@
 
 All notable changes to `contracts` will be documented in this file.
 
+## #v1.6.1 - 2025-02-13
+
+update composer.json to accomodate homeful/kwyc-check:^v1.5
+
 ## #v1.6.0 - 2025-02-09
 
 update Contact, use Customer as Contact
