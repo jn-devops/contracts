@@ -75,6 +75,7 @@ use Homeful\Contracts\States\{Pending, Consulted};
 use Homeful\KwYCCheck\Data\CheckinData;
 use Homeful\KwYCCheck\Models\Lead;
 use Homeful\Common\Classes\Amount;
+use Homeful\Contracts\Data\LoanTermOptionData;
 
 uses(RefreshDatabase::class, WithFaker::class);
 
@@ -909,3 +910,18 @@ test('contact payment can accept array', function (array $payment_payload) {
     $contract->save();
     expect($contract->payment)->toBeArray();
 })->with('payment_payload');
+
+test('contract has loan term attribute', function () {
+    $contract = Contract::factory()->create();
+    $loan_term_option = [
+        'term_1' => '1 - 36',
+        'term_2' => '37 - 348',
+        'term_3' => '349 - 360',
+        'months_term' => 360,
+        'loanable_years' => 30,
+    ];
+    $contract->loan_term_option = $loan_term_option;
+    $contract->save();
+    expect($contract->loan_term_option->toArray())->toBe($loan_term_option);
+    expect(LoanTermOptionData::from($contract->loan_term_option))->toBeInstanceOf(LoanTermOptionData::class);
+});

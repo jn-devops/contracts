@@ -8,6 +8,7 @@ use Homeful\Contracts\Traits\HasDatedStatusAttributes;
 use Spatie\SchemalessAttributes\SchemalessAttributes;
 use Homeful\Properties\Models\Property as Inventory;
 use Spatie\LaravelData\{DataCollection, WithData};
+use Homeful\Contracts\Traits\HasOptionsAttributes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Homeful\Contacts\Models\Contact as Customer;
 use Homeful\Contracts\Traits\HasInputAttributes;
@@ -25,6 +26,7 @@ use Spatie\ModelStates\HasStates;
 use Homeful\Mortgage\Mortgage;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
+use Homeful\Contracts\Data\LoanTermOptionData;
 
 /**
  * Class Contract
@@ -79,6 +81,7 @@ use Illuminate\Support\Str;
  * @property bool $cancelled
  * @property SchemalessAttributes $meta
  * @property string $seller_commission_code
+ * @property LoanTermOptionData $loan_term_option
  *
  * @method Model create()
  * @method int getKey()
@@ -86,7 +89,7 @@ use Illuminate\Support\Str;
  */
 class Contract extends Model
 {
-    use HasInputAttributes, HasInputRelations, HasDatedStatusAttributes;
+    use HasInputAttributes, HasOptionsAttributes, HasInputRelations, HasDatedStatusAttributes;
     use HasFactory;
     use Notifiable;
     use HasStates;
@@ -130,6 +133,7 @@ class Contract extends Model
         'disapproved_at' => 'datetime:Y-m-d',
         'overridden_at' => 'datetime:Y-m-d',
         'cancelled_at' => 'datetime:Y-m-d',
+        'loan_term_option' => LoanTermOptionData::class
     ];
 
     protected string $dataClass = ContractData::class;

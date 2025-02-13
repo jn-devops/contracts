@@ -13,6 +13,7 @@ use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Transformers\DateTimeInterfaceTransformer;
+use Homeful\Contracts\Data\LoanTermOptionData;
 
 class ContractData extends Data
 {
@@ -41,7 +42,8 @@ class ContractData extends Data
         public bool $approved,
         public bool $disapproved,
         public bool $overridden,
-        public bool $cancelled
+        public bool $cancelled,
+        public ?LoanTermOptionData $loan_term_option
     ){}
 
     public static function fromModel(Contract $contract): ContractData
@@ -72,7 +74,8 @@ class ContractData extends Data
             approved: $contract->approved,
             disapproved: $contract->disapproved,
             overridden: $contract->overridden,
-            cancelled: $contract->cancelled
+            cancelled: $contract->cancelled,
+            loan_term_option: $contract->loan_term_option
         );
     }
 }
