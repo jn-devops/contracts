@@ -43,7 +43,8 @@ class ContractData extends Data
         public bool $disapproved,
         public bool $overridden,
         public bool $cancelled,
-        public ?LoanTermOptionData $loan_term_option
+        public ?LoanTermOptionData $loan_term_option,
+        public ?PaymentData $payment,
     ){}
 
     public static function fromModel(Contract $contract): ContractData
@@ -75,7 +76,8 @@ class ContractData extends Data
             disapproved: $contract->disapproved,
             overridden: $contract->overridden,
             cancelled: $contract->cancelled,
-            loan_term_option: $contract->loan_term_option
+            loan_term_option: $contract->loan_term_option,
+            payment: $contract->payment
         );
     }
 }

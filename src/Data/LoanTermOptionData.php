@@ -3,6 +3,7 @@
 namespace Homeful\Contracts\Data;
 
 use Spatie\LaravelData\Data;
+
 class LoanTermOptionData extends Data
 {
     public function __construct(

@@ -76,6 +76,7 @@ use Homeful\KwYCCheck\Data\CheckinData;
 use Homeful\KwYCCheck\Models\Lead;
 use Homeful\Common\Classes\Amount;
 use Homeful\Contracts\Data\LoanTermOptionData;
+use Homeful\Contracts\Data\PaymentData;
 
 uses(RefreshDatabase::class, WithFaker::class);
 
@@ -908,7 +909,7 @@ test('contact payment can accept array', function (array $payment_payload) {
     expect($contract->payment)->toBeNull();
     $contract->update(['payment' => $payment_payload]);
     $contract->save();
-    expect($contract->payment)->toBeArray();
+    expect($contract->payment)->toBeInstanceOf(PaymentData::class);
 })->with('payment_payload');
 
 test('contract has loan term attribute', function () {

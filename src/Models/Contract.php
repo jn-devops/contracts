@@ -27,6 +27,7 @@ use Homeful\Mortgage\Mortgage;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Homeful\Contracts\Data\LoanTermOptionData;
+use Homeful\Contracts\Data\PaymentData;
 
 /**
  * Class Contract
@@ -35,7 +36,7 @@ use Homeful\Contracts\Data\LoanTermOptionData;
  * @property ContactMetaData|null $contact
  * @property PropertyData|null $property
  * @property CheckinData|null $checkin
- * @property array $payment
+ * @property PaymentData|null $payment
  * @property Customer|null $customer
  * @property Inventory|null $inventory
  * @property float $percent_down_payment
@@ -115,7 +116,7 @@ class Contract extends Model
         'state' => ContractState::class,
         'contact' => ContactMetaData::class,
         'property' => PropertyData::class,
-        'payment' => 'array',
+        'payment' => PaymentData::class,
         'consulted_at' => 'datetime:Y-m-d',
         'availed_at' => 'datetime:Y-m-d',
         'verified_at' => 'datetime:Y-m-d',
