@@ -8,4 +8,13 @@ class Cancelled extends ContractState
     {
         return 'cancelled';
     }
+
+    public function color(): string
+    {
+        return 'grey';
+    }
+    public function icon(): string
+    {
+        return 'heroicon-m-x-circle';
+    }
 }

@@ -8,4 +8,13 @@ class Approved extends ContractState
     {
         return 'approved';
     }
+
+    public function color(): string
+    {
+        return 'info';
+    }
+    public function icon(): string
+    {
+        return 'heroicon-m-sparkles';
+    }
 }
