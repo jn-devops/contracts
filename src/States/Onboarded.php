@@ -8,4 +8,12 @@ class Onboarded extends ContractState
     {
         return 'onboarded';
     }
+    public function color(): string
+    {
+        return '';
+    }
+    public function icon(): string
+    {
+        return '';
+    }
 }

@@ -8,4 +8,12 @@ class Verified extends ContractState
     {
         return 'verified';
     }
+    public function color(): string
+    {
+        return '';
+    }
+    public function icon(): string
+    {
+        return '';
+    }
 }

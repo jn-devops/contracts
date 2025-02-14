@@ -10,4 +10,12 @@ class Consulted extends ContractState
     {
         return 'consulted';
     }
+    public function color(): string
+    {
+        return '';
+    }
+    public function icon(): string
+    {
+        return '';
+    }
 }

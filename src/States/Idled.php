@@ -8,4 +8,12 @@ class Idled extends ContractState
     {
         return 'idled';
     }
+    public function color(): string
+    {
+        return '';
+    }
+    public function icon(): string
+    {
+        return '';
+    }
 }
