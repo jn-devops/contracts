@@ -2,6 +2,10 @@
 
 All notable changes to `contracts` will be documented in this file.
 
+## #v1.6.4 - 2025-02-14
+
+**Full Changelog**: https://github.com/jn-devops/contracts/compare/v1.6.3...%23v1.6.4
+
 ## #v1.6.3 - 2025-02-13
 
 update composer.json to updgrade homeful/notifications
