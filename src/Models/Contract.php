@@ -83,6 +83,7 @@ use Homeful\Contracts\Data\PaymentData;
  * @property SchemalessAttributes $meta
  * @property string $seller_commission_code
  * @property LoanTermOptionData $loan_term_option
+ * @property array $misc
  *
  * @method Model create()
  * @method int getKey()
@@ -110,6 +111,7 @@ class Contract extends Model
         'inventory',
 //        'reference_code',
         'seller_commission_code',
+        'misc'
     ];
 
     protected $casts = [
@@ -134,7 +136,8 @@ class Contract extends Model
         'disapproved_at' => 'datetime:Y-m-d',
         'overridden_at' => 'datetime:Y-m-d',
         'cancelled_at' => 'datetime:Y-m-d',
-        'loan_term_option' => LoanTermOptionData::class
+        'loan_term_option' => LoanTermOptionData::class,
+        'misc' => 'array'
     ];
 
     protected string $dataClass = ContractData::class;
