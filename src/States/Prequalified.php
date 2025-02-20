@@ -8,4 +8,12 @@ class Prequalified extends ContractState
     {
         return 'pre-qualified';
     }
+    public function color(): string
+    {
+        return 'warning';
+    }
+    public function icon(): string
+    {
+        return 'heroicon-m-arrow-path';
+    }
 }

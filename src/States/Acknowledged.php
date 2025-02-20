@@ -8,4 +8,13 @@ class Acknowledged extends ContractState
     {
         return 'acknowledged';
     }
+
+    public function color(): string
+    {
+        return '';
+    }
+    public function icon(): string
+    {
+        return '';
+    }
 }

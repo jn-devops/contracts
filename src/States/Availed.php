@@ -8,4 +8,12 @@ class Availed extends ContractState
     {
         return 'availed';
     }
+    public function color(): string
+    {
+        return '';
+    }
+    public function icon(): string
+    {
+        return '';
+    }
 }

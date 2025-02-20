@@ -8,4 +8,12 @@ class Assigned extends ContractState
     {
         return 'assigned';
     }
+    public function color(): string
+    {
+        return '';
+    }
+    public function icon(): string
+    {
+        return '';
+    }
 }

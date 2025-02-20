@@ -8,4 +8,13 @@ class Disapproved extends ContractState
     {
         return 'disapproved';
     }
+
+    public function color(): string
+    {
+        return 'danger';
+    }
+    public function icon(): string
+    {
+        return 'heroicon-m-arrow-path';
+    }
 }

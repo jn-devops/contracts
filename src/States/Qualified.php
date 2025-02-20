@@ -8,4 +8,12 @@ class Qualified extends ContractState
     {
         return 'qualified';
     }
+    public function color(): string
+    {
+        return 'success';
+    }
+    public function icon(): string
+    {
+        return 'heroicon-m-check-badge';
+    }
 }

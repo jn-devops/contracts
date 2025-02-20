@@ -8,4 +8,12 @@ class PaymentFailed extends ContractState
     {
         return 'payment failed';
     }
+    public function color(): string
+    {
+        return '';
+    }
+    public function icon(): string
+    {
+        return '';
+    }
 }

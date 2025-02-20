@@ -66,4 +66,6 @@ abstract class ContractState extends State
     }
 
     abstract public function name(): string;
+    abstract public function color(): string;
+    abstract public function icon(): string;
 }

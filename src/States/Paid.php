@@ -8,4 +8,12 @@ class Paid extends ContractState
     {
         return 'paid';
     }
+    public function color(): string
+    {
+        return '';
+    }
+    public function icon(): string
+    {
+        return '';
+    }
 }
