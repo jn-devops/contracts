@@ -12,6 +12,7 @@ use Homeful\Contracts\Traits\HasOptionsAttributes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Homeful\Contacts\Models\Contact as Customer;
 use Homeful\Contracts\Traits\HasInputAttributes;
+use Homeful\Contracts\Traits\HasMiscAttributes;
 use Homeful\Contracts\Traits\HasInputRelations;
 use Homeful\Contacts\Classes\ContactMetaData;
 use Homeful\Contracts\States\ContractState;
@@ -84,6 +85,7 @@ use Homeful\Contracts\Data\PaymentData;
  * @property string $seller_commission_code
  * @property LoanTermOptionData $loan_term_option
  * @property array $misc
+ * @property string $voucher_code
  *
  * @method Model create()
  * @method int getKey()
@@ -91,7 +93,7 @@ use Homeful\Contracts\Data\PaymentData;
  */
 class Contract extends Model
 {
-    use HasInputAttributes, HasOptionsAttributes, HasInputRelations, HasDatedStatusAttributes;
+    use HasInputAttributes, HasOptionsAttributes, HasInputRelations, HasDatedStatusAttributes, HasMiscAttributes;
     use HasFactory;
     use Notifiable;
     use HasStates;

@@ -77,6 +77,7 @@ use Homeful\KwYCCheck\Models\Lead;
 use Homeful\Common\Classes\Amount;
 use Homeful\Contracts\Data\LoanTermOptionData;
 use Homeful\Contracts\Data\PaymentData;
+use Symfony\Component\Console\Input\Input;
 
 uses(RefreshDatabase::class, WithFaker::class);
 
@@ -201,6 +202,8 @@ it('has optional attributes', function(Contact $customer, Inventory $inventory, 
         $contract->down_payment_term = $params[Input::DP_TERM];
         $contract->balance_payment_term = $params[Input::BP_TERM];
         $contract->interest_rate = $params[Input::BP_INTEREST_RATE];
+        $contract->voucher_code = 'test';
+        dd($contract);
         $contract->save();
         expect($contract->seller_commission_code)->toBeNull();
         expect($contract->consulted)->toBeFalse();
