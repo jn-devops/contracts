@@ -5,7 +5,6 @@ namespace Homeful\Contracts\Traits;
 use Homeful\Contracts\Models\Contract;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\SchemalessAttributes\Casts\SchemalessAttributes;
-use Illuminate\Database\Eloquent\Builder;
 trait HasMiscAttributes
 {
     const VOUCHER_CODE ='voucher_code';
