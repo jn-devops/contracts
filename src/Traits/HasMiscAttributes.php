@@ -9,15 +9,18 @@ trait HasMiscAttributes
 {
     const VOUCHER_CODE ='voucher_code';
     const VOUCHER_SOURCE ='voucher_source';
+    const MISC_INPUTS ='misc_inputs';
     public function initializeHasMiscAttributes(): void
     {
         $this->mergeFillable([
             'voucher_code',
             'voucher_source',
-            'misc'
+            'misc',
+            Contract::MISC_INPUTS,
         ]);
         $this->mergeCasts([
             'misc' => SchemalessAttributes::class,
+            Contract::MISC_INPUTS => 'array',
         ]);
     }
 
@@ -44,8 +47,17 @@ trait HasMiscAttributes
     }
 
     public function getVoucherSourceAttribute(): string{
-        $default = null;
         return $this->getAttribute('misc')->get(Contract::VOUCHER_SOURCE) ?? '';
+    }
+
+    public function setMiscInputAttribute(array $inputs): self
+    {
+        $this->getAttribute('misc')->set(Contract::MISC_INPUTS, $inputs);
+        return $this;
+    }
+
+    public function getMiscInputAttribute(): array{
+        return $this->getAttribute('misc')->get(Contract::MISC_INPUTS) ?? [];
     }
 
 }

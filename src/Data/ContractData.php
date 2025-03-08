@@ -47,6 +47,7 @@ class ContractData extends Data
         public ?LoanTermOptionData $loan_term_option,
         public ?PaymentData $payment,
         public ?SchemalessAttributes $misc,
+        public ?array $misc_inputs,
     ){}
 
     public static function fromModel(Contract $contract): ContractData
@@ -81,6 +82,7 @@ class ContractData extends Data
             loan_term_option: $contract->loan_term_option,
             payment: $contract->payment,
             misc: $contract->misc,
+            misc_inputs: $contract->misc_inputs,
         );
     }
 }

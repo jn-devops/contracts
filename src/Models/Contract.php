@@ -84,8 +84,10 @@ use Illuminate\Support\Str;
  * @property SchemalessAttributes $meta
  * @property string $seller_commission_code
  * @property LoanTermOptionData $loan_term_option
- * @property array $misc
+ * @property SchemalessAttributes $misc
  * @property string $voucher_code
+ * @property string $voucher_source
+ * @property array $misc_inputs
  *
  * @method Model create()
  * @method int getKey()
@@ -113,7 +115,6 @@ class Contract extends Model
         'inventory',
 //        'reference_code',
         'seller_commission_code',
-        'misc'
     ];
 
     protected $casts = [
