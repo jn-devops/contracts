@@ -50,13 +50,13 @@ trait HasMiscAttributes
         return $this->getAttribute('misc')->get(Contract::VOUCHER_SOURCE) ?? '';
     }
 
-    public function setMiscInputAttribute(array $inputs): self
+    public function setMiscInputsAttribute(array $inputs): self
     {
         $this->getAttribute('misc')->set(Contract::MISC_INPUTS, $inputs);
         return $this;
     }
 
-    public function getMiscInputAttribute(): array{
+    public function getMiscInputsAttribute(): array{
         return $this->getAttribute('misc')->get(Contract::MISC_INPUTS) ?? [];
     }
 
