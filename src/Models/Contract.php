@@ -14,6 +14,7 @@ use Homeful\Contacts\Models\Contact as Customer;
 use Homeful\Contracts\Traits\HasInputAttributes;
 use Homeful\Contracts\Traits\HasMiscAttributes;
 use Homeful\Contracts\Traits\HasInputRelations;
+use Homeful\Contracts\Data\LoanTermOptionData;
 use Homeful\Contacts\Classes\ContactMetaData;
 use Homeful\Contracts\States\ContractState;
 use Illuminate\Notifications\Notification;
@@ -22,13 +23,12 @@ use Illuminate\Notifications\Notifiable;
 use Homeful\Contracts\Data\ContractData;
 use Illuminate\Database\Eloquent\Model;
 use Homeful\KwYCCheck\Data\CheckinData;
+use Homeful\Contracts\Data\PaymentData;
 use Homeful\Common\Traits\HasMeta;
 use Spatie\ModelStates\HasStates;
 use Homeful\Mortgage\Mortgage;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
-use Homeful\Contracts\Data\LoanTermOptionData;
-use Homeful\Contracts\Data\PaymentData;
 
 /**
  * Class Contract

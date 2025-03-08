@@ -3,6 +3,8 @@
 namespace Homeful\Contracts\Traits;
 
 use Homeful\Contracts\Models\Contract;
+use Illuminate\Database\Eloquent\Builder;
+use Spatie\SchemalessAttributes\Casts\SchemalessAttributes;
 
 trait HasMiscAttributes
 {
@@ -13,6 +15,10 @@ trait HasMiscAttributes
         $this->mergeFillable([
             'voucher_code',
             'promo_code',
+            'misc'
+        ]);
+        $this->mergeCasts([
+            'misc' => SchemalessAttributes::class,
         ]);
     }
 
@@ -23,7 +29,7 @@ trait HasMiscAttributes
     }
 
     public function getVoucherCodeAttribute(): string{
-        $default = null;
+        $default = '';
         return $this->getAttribute('misc')->get(Contract::VOUCHER_CODE) ?? $default;
     }
 
@@ -35,7 +41,7 @@ trait HasMiscAttributes
 
     public function getPromoCodeAttribute(): string{
         $default = null;
-        return $this->getAttribute('misc')->get(Contract::PROMO_CODE) ?? $default;
+        return $this->getAttribute('misc')->get(Contract::PROMO_CODE) ?? '';
     }
 
 }
