@@ -13,7 +13,7 @@ trait HasMiscAttributes
     {
         $this->mergeFillable([
             'voucher_code',
-            'source_of_voucher',
+            'voucher_source',
             'misc'
         ]);
         $this->mergeCasts([
