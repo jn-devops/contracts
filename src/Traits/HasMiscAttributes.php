@@ -37,13 +37,13 @@ trait HasMiscAttributes
         return $this->getAttribute('misc')->get(Contract::VOUCHER_CODE) ?? $default;
     }
 
-    public function setSourceOfVoucherAttribute(string $voucher_code): self
+    public function setVoucherSourceAttribute(string $voucher_source): self
     {
-        $this->getAttribute('misc')->set(Contract::VOUCHER_SOURCE, $voucher_code);
+        $this->getAttribute('misc')->set(Contract::VOUCHER_SOURCE, $voucher_source);
         return $this;
     }
 
-    public function getSourceOfVoucherAttribute(): string{
+    public function getVoucherSourceAttribute(): string{
         $default = null;
         return $this->getAttribute('misc')->get(Contract::VOUCHER_SOURCE) ?? '';
     }
