@@ -45,7 +45,7 @@ class ContractData extends Data
         public bool $cancelled,
         public ?LoanTermOptionData $loan_term_option,
         public ?PaymentData $payment,
-        public ?array $misc,
+        public ?SchemalessAttributes $misc,
     ){}
 
     public static function fromModel(Contract $contract): ContractData
