@@ -2,6 +2,10 @@
 
 All notable changes to `contracts` will be documented in this file.
 
+## v1.7.6 - 2025-03-08
+
+**Full Changelog**: https://github.com/jn-devops/contracts/compare/v1.7.5...v1.7.6
+
 ## v1.7.5 - 2025-02-27
 
 **Full Changelog**: https://github.com/jn-devops/contracts/compare/v1.6.3...v1.7.5
