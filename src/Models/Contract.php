@@ -139,7 +139,6 @@ class Contract extends Model
         'overridden_at' => 'datetime:Y-m-d',
         'cancelled_at' => 'datetime:Y-m-d',
         'loan_term_option' => LoanTermOptionData::class,
-        'misc' => 'array'
     ];
 
     protected string $dataClass = ContractData::class;

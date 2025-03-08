@@ -8,12 +8,12 @@ use Spatie\SchemalessAttributes\Casts\SchemalessAttributes;
 trait HasMiscAttributes
 {
     const VOUCHER_CODE ='voucher_code';
-    const PROMO_CODE ='promo_code';
+    const VOUCHER_SOURCE ='voucher_source';
     public function initializeHasMiscAttributes(): void
     {
         $this->mergeFillable([
             'voucher_code',
-            'promo_code',
+            'source_of_voucher',
             'misc'
         ]);
         $this->mergeCasts([
@@ -37,15 +37,15 @@ trait HasMiscAttributes
         return $this->getAttribute('misc')->get(Contract::VOUCHER_CODE) ?? $default;
     }
 
-    public function setPromoCodeAttribute(string $voucher_code): self
+    public function setSourceOfVoucherAttribute(string $voucher_code): self
     {
-        $this->getAttribute('misc')->set(Contract::PROMO_CODE, $voucher_code);
+        $this->getAttribute('misc')->set(Contract::VOUCHER_SOURCE, $voucher_code);
         return $this;
     }
 
-    public function getPromoCodeAttribute(): string{
+    public function getSourceOfVoucherAttribute(): string{
         $default = null;
-        return $this->getAttribute('misc')->get(Contract::PROMO_CODE) ?? '';
+        return $this->getAttribute('misc')->get(Contract::VOUCHER_SOURCE) ?? '';
     }
 
 }
