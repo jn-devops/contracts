@@ -14,7 +14,7 @@ use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Transformers\DateTimeInterfaceTransformer;
 use Homeful\Contracts\Data\LoanTermOptionData;
-use Spatie\SchemalessAttributes\Casts\SchemalessAttributes;
+use Spatie\SchemalessAttributes\SchemalessAttributes;
 
 class ContractData extends Data
 {
