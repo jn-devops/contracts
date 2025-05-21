@@ -51,9 +51,7 @@ abstract class ContractState extends State
             ->allowTransition(Idled::class, Acknowledged::class, IdledToAcknowledged::class)
             ->allowTransition(Acknowledged::class, Prequalified::class, AcknowledgedToPrequalified::class)
             ->allowTransition(Prequalified::class, Qualified::class, PrequalifiedToQualified::class)
-
             ->allowTransition(Prequalified::class, NotQualified::class, PrequalifiedToNotQualified::class)
-
             ->allowTransition(Qualified::class, Approved::class, QualifiedToApproved::class)
             ->allowTransition(Qualified::class, Disapproved::class, QualifiedToDisapproved::class)
             ->allowTransition(Disapproved::class, Overridden::class, DisapprovedToOverridden::class)

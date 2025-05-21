@@ -87,6 +87,10 @@ use Illuminate\Support\Str;
  * @property SchemalessAttributes $misc
  * @property string $voucher_code
  * @property string $voucher_source
+ * @property string $referral_code
+ * @property string $source_of_sale
+ * @property string $campaign_code
+ * @property string $campaign_author
  * @property array $misc_inputs
  *
  * @method Model create()
