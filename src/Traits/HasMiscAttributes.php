@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Spatie\SchemalessAttributes\Casts\SchemalessAttributes;
 trait HasMiscAttributes
 {
+    const PREFERRED_PROJECT ='preferred_project';
+
     const VOUCHER_CODE ='voucher_code';
     const VOUCHER_SOURCE ='voucher_source';
 
@@ -27,8 +29,10 @@ trait HasMiscAttributes
             'referral_code',
             'campaign_author',
             'campaign_code',
+            'preferred_project',
             Contract::MISC_INPUTS,
         ]);
+        
         $this->mergeCasts([
             'misc' => SchemalessAttributes::class,
             Contract::MISC_INPUTS => 'array',
@@ -103,6 +107,15 @@ trait HasMiscAttributes
 
     public function setCampaignCodeAttribute(string $campaign_code): self{
         $this->getAttribute('misc')->set(Contract::CAMPAIGN_CODE, $campaign_code);
+        return $this;
+    }
+
+    public function getPreferredProjectAttribute(): string{
+        return $this->getAttribute('misc')->get(Contract::PREFERRED_PROJECT) ?? '';
+    }
+
+    public function setPreferredProjectAttribute(string $campaign_code): self{
+        $this->getAttribute('misc')->set(Contract::PREFERRED_PROJECT, $campaign_code);
         return $this;
     }
 }
